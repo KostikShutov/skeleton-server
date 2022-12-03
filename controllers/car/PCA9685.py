@@ -46,7 +46,7 @@ class PWM(object):
         time.sleep(0.005)
         self._frequency = 60
 
-    def _write_byte_data(self, reg, value):
+    def _write_byte_data(self, reg, value) -> None:
         """Write data to I2C with self.address"""
         logging.info('[PWM] Writing value %2X to %2X', value, reg)
         try:
@@ -57,7 +57,7 @@ class PWM(object):
 
     def _read_byte_data(self, reg):
         """Read data from I2C with self.address"""
-        logging.info('Reading value from %2X' % reg)
+        logging.info('[PWM] Reading value from %2X' % reg)
         try:
             results = self.bus.read_byte_data(self.address, reg)
             return results
@@ -101,7 +101,7 @@ class PWM(object):
             for address in tmp_addresses:
                 if address != '--':
                     addresses.append(address)
-        print("Conneceted i2c device:")
+        print("Connected i2c device:")
         if addresses == []:
             print("None")
         else:
@@ -117,11 +117,11 @@ class PWM(object):
             quit()
 
     @property
-    def frequency(self):
+    def frequency(self) -> int:
         return self._frequency
 
     @frequency.setter
-    def frequency(self, freq):
+    def frequency(self, freq) -> None:
         """Set PWM frequency"""
         logging.info('[PWM] Set frequency to %d', freq)
         self._frequency = freq
@@ -142,7 +142,7 @@ class PWM(object):
         time.sleep(0.005)
         self._write_byte_data(self._MODE1, old_mode | 0x80)
 
-    def write(self, channel, on, off):
+    def write(self, channel, on, off) -> None:
         """Set on and off value on specific channel"""
         logging.info('[PWM] Set channel "%d" to value "%d"', channel, off)
         self._write_byte_data(self._LED0_ON_L + 4 * channel, on & 0xFF)
@@ -150,7 +150,7 @@ class PWM(object):
         self._write_byte_data(self._LED0_OFF_L + 4 * channel, off & 0xFF)
         self._write_byte_data(self._LED0_OFF_H + 4 * channel, off >> 8)
 
-    def write_all_value(self, on, off):
+    def write_all_value(self, on, off) -> None:
         """Set on and off value on all channel"""
         logging.info('[PWM] Set all channel to value "%d"', off)
         self._write_byte_data(self._ALL_LED_ON_L, on & 0xFF)

@@ -16,7 +16,7 @@ class Motor(object):
         GPIO.setup(self.directionChannel, GPIO.OUT)
 
         logging.info('[Motor] Setup motor direction channel at %s', self.directionChannel)
-        logging.info('[Motor] setup motor pwm channel')
+        logging.info('[Motor] Setup motor pwm channel')
         # logging.info('[Motor] Setup motor pwm channel as %s', self._pwm.__name__)
 
     @property
@@ -26,10 +26,10 @@ class Motor(object):
     @speed.setter
     def speed(self, speed) -> None:
         if speed not in range(0, 101):
-            raise ValueError('speed ranges fron 0 to 100, not "{0}"'.format(speed))
+            raise ValueError('Speed ranges from 0 to 100, not "{0}"'.format(speed))
         if not callable(self._pwm):
             raise ValueError(
-                'pwm is not callable, please set Motor.pwm to a pwm control function with only 1 veriable speed')
+                'pwm is not callable, please set Motor.pwm to a pwm control function with only 1 variable speed')
         logging.info('[Motor] Set speed to: %s', speed)
         self._speed = speed
         self._pwm(self._speed)
@@ -44,12 +44,12 @@ class Motor(object):
         self.speed = self._speed
         logging.info('[Motor] Moving backward (%s)', str(self.backwardOffset))
 
-    def stop(self):
+    def stop(self) -> None:
         self.speed = 0
         logging.info('[Motor] Stop')
 
     @property
-    def offset(self):
+    def offset(self) -> bool:
         return self._offset
 
     @offset.setter
@@ -64,5 +64,5 @@ class Motor(object):
 
     @pwm.setter
     def pwm(self, pwm) -> None:
-        logging.info('[Motor] Set pwm')
         self._pwm = pwm
+        logging.info('[Motor] Set pwm')

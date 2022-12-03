@@ -13,8 +13,8 @@ class BackWheels(object):
         self.fileStorage = FileStorage.FileStorage()
         self.speedService = speedService
 
-        self.forwardA = int(self.fileStorage.get('FORWARD_A', defaultValue=1))
-        self.forwardB = int(self.fileStorage.get('FORWARD_B', defaultValue=1))
+        self.forwardA = bool(int(self.fileStorage.get('FORWARD_A', defaultValue=1)))
+        self.forwardB = bool(int(self.fileStorage.get('FORWARD_B', defaultValue=1)))
 
         self.leftMotor = TB6612.Motor(self.MOTOR_A, offset=self.forwardA)
         self.rightMotor = TB6612.Motor(self.MOTOR_B, offset=self.forwardB)

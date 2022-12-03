@@ -16,10 +16,10 @@ class FrontWheels(object):
         self.turningOffset = int(self.fileStorage.get('TURNING_OFFSET', defaultValue=0))
         self.servo = Servo.Servo(self.channel, busNumber=busNumber, offset=self.turningOffset)
 
-        logging.info('[Front wheels] Min angle: %s', self.angleService.getMinAngle())
-        logging.info('[Front wheels] Max angle: %s', self.angleService.getMaxAngle())
-        logging.info('[Front wheels] PWM channel: %s', self.channel)
-        logging.info('[Front wheels] Offset value: %s', self.turningOffset)
+        logging.info('[Front wheels] Min angle: %d', self.angleService.getMinAngle())
+        logging.info('[Front wheels] Max angle: %d', self.angleService.getMaxAngle())
+        logging.info('[Front wheels] PWM channel: %d', self.channel)
+        logging.info('[Front wheels] Offset value: %d', self.turningOffset)
 
     def turnLeft(self) -> None:
         self.angleService.setAngle(self.angleService.getMinAngle())
@@ -39,7 +39,7 @@ class FrontWheels(object):
     def turn(self, angle: int) -> None:
         self.angleService.setAngle(angle)
         self.servo.write(self.angleService.getCurrentAngle())
-        logging.info('[Front wheels] Turn angle to %s', self.angleService.getCurrentAngle())
+        logging.info('[Front wheels] Turn angle to %d', self.angleService.getCurrentAngle())
 
     def ready(self) -> None:
         self.servo.offset = self.turningOffset

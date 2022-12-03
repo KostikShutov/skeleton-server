@@ -26,15 +26,15 @@ class Servo(object):
         """ Calculate 12-bit analog value from giving angle """
         pulseWide = self.pwm.map(angle, 0, 180, self.MIN_PULSE_WIDTH, self.MAX_PULSE_WIDTH)
         analogValue = int(float(pulseWide) / 1000000 * self.frequency * 4096)
-        logging.info('[Servo] Angle %d equals analogValue %d', angle, analogValue)
+        logging.info('[Servo] Angle: %d, Analog value: %d', angle, analogValue)
         return analogValue
 
     @property
-    def frequency(self):
+    def frequency(self) -> int:
         return self._frequency
 
     @frequency.setter
-    def frequency(self, value):
+    def frequency(self, value) -> None:
         self._frequency = value
         self.pwm.frequency = value
 
@@ -61,4 +61,4 @@ class Servo(object):
         val = self._angle_to_analog(angle)
         val += self.offset
         self.pwm.write(self.channel, 0, val)
-        logging.info('[Servo] Turn angle = %d', angle)
+        logging.info('[Servo] Turn angle to %d', angle)

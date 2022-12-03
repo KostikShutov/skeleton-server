@@ -23,13 +23,13 @@ class Camera(object):
         self.panServo = Servo.Servo(self.PAN_CHANNEL, busNumber=busNumber, offset=self.panOffset)
         self.tiltServo = Servo.Servo(self.TILT_CHANNEL, busNumber=busNumber, offset=self.tiltOffset)
 
-        logging.info('[Camera] Pan servo channel: %s', self.PAN_CHANNEL)
-        logging.info('[Camera] Tilt servo channel: %s', self.TILT_CHANNEL)
-        logging.info('[Camera] Pan offset value: %s', self.panOffset)
-        logging.info('[Camera] Tilt offset value: %s', self.tiltOffset)
-
         self.currentPan = 0
         self.currentTilt = 0
+
+        logging.info('[Camera] Pan servo channel: %d', self.PAN_CHANNEL)
+        logging.info('[Camera] Tilt servo channel: %d', self.TILT_CHANNEL)
+        logging.info('[Camera] Pan offset value: %d', self.panOffset)
+        logging.info('[Camera] Tilt offset value: %d', self.tiltOffset)
 
     def safePlus(self, variable: int, plusValue: int) -> int:
         variable += plusValue
@@ -40,30 +40,30 @@ class Camera(object):
         return variable
 
     def turnLeft(self, step: int = PAN_STEP) -> None:
-        logging.info('[Camera] Turn left at step: %s', step)
         self.currentPan = self.safePlus(self.currentPan, step)
         self.panServo.write(self.currentPan)
+        logging.info('[Camera] Turn left at step: %d', step)
 
     def turnRight(self, step: int = PAN_STEP) -> None:
-        logging.info('[Camera] Turn right at step: %s', step)
         self.currentPan = self.safePlus(self.currentPan, -step)
         self.panServo.write(self.currentPan)
+        logging.info('[Camera] Turn right at step: %d', step)
 
     def turnUp(self, step: int = TILT_STEP) -> None:
-        logging.info('[Camera] Turn up at step: %s', step)
         self.currentTilt = self.safePlus(self.currentTilt, step)
         self.tiltServo.write(self.currentTilt)
+        logging.info('[Camera] Turn up at step: %d', step)
 
     def turnDown(self, step: int = TILT_STEP) -> None:
-        logging.info('[Camera] Turn down at step: %s', step)
         self.currentTilt = self.safePlus(self.currentTilt, -step)
         self.tiltServo.write(self.currentTilt)
+        logging.info('[Camera] Turn down at step: %d', step)
 
     def ready(self) -> None:
-        logging.info('[Camera] Turn to "Ready" position')
         self.panServo.offset = self.panOffset
         self.tiltServo.offset = self.tiltOffset
         self.currentPan = self.READY_PAN
         self.currentTilt = self.READY_TILT
         self.panServo.write(self.currentPan)
         self.tiltServo.write(self.currentTilt)
+        logging.info('[Camera] Turn to ready position')
