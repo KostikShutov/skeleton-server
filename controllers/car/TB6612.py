@@ -30,7 +30,7 @@ class Motor(object):
         if not callable(self._pwm):
             raise ValueError(
                 'pwm is not callable, please set Motor.pwm to a pwm control function with only 1 variable speed')
-        logging.info('[Motor] Set speed to: %s', speed)
+        logging.info('[Motor] Set speed to %s', speed)
         self._speed = speed
         self._pwm(self._speed)
 
