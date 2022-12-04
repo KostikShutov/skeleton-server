@@ -1,5 +1,5 @@
 import logging
-from . import AngleService, SpeedService, FrontWheels, BackWheels, Camera, PCA9685, Servo, FileStorage, TB6612
+from . import AngleService, BackWheels, SpeedService, Camera, FileStorage, FrontWheels, PCA9685, Servo, TB6612
 from .. import ControllerInterface
 
 
@@ -12,10 +12,10 @@ class RemoteController(ControllerInterface.ControllerInterface):
     RIGHT_MOTOR_DIRECTION_CHANNEL = 27
 
     FRONT_WHEEL_CHANNEL = 0
-    PAN_CHANNEL = 1  # Pan servo channel
-    TILT_CHANNEL = 2  # Tilt servo channel
-    LEFT_MOTOR_PWM_CHANNEL = 4
-    RIGHT_MOTOR_PWM_CHANNEL = 5
+    CAMERA_PAN_CHANNEL = 1
+    CAMERA_TILT_CHANNEL = 2
+    BACK_LEFT_MOTOR_CHANNEL = 4
+    BACK_RIGHT_MOTOR_CHANNEL = 5
 
     def __init__(self) -> None:
         logging.root.setLevel(logging.INFO)
@@ -31,7 +31,7 @@ class RemoteController(ControllerInterface.ControllerInterface):
             servo=Servo.Servo(
                 pwm=self.pwm,
                 channel=self.FRONT_WHEEL_CHANNEL,
-                offset=int(self.fileStorage.get('TURNING_OFFSET', defaultValue=0)),
+                offset=int(self.fileStorage.get('FRONT_TURNING_OFFSET', defaultValue=0)),
             ),
         )
 
@@ -40,28 +40,28 @@ class RemoteController(ControllerInterface.ControllerInterface):
             pwm=self.pwm,
             leftMotor=TB6612.Motor(
                 pwm=self.pwm,
-                pwmChannel=self.LEFT_MOTOR_PWM_CHANNEL,
+                pwmChannel=self.BACK_LEFT_MOTOR_CHANNEL,
                 directionChannel=self.LEFT_MOTOR_DIRECTION_CHANNEL,
-                offset=bool(int(self.fileStorage.get('LEFT_MOTOR_OFFSET', defaultValue=1))),
+                offset=bool(int(self.fileStorage.get('BACK_LEFT_MOTOR_OFFSET', defaultValue=1))),
             ),
             rightMotor=TB6612.Motor(
                 pwm=self.pwm,
-                pwmChannel=self.RIGHT_MOTOR_PWM_CHANNEL,
+                pwmChannel=self.BACK_RIGHT_MOTOR_CHANNEL,
                 directionChannel=self.RIGHT_MOTOR_DIRECTION_CHANNEL,
-                offset=bool(int(self.fileStorage.get('RIGHT_MOTOR_OFFSET', defaultValue=1))),
+                offset=bool(int(self.fileStorage.get('BACK_RIGHT_MOTOR_OFFSET', defaultValue=1))),
             ),
         )
 
         self.camera = Camera.Camera(
             panServo=Servo.Servo(
                 pwm=self.pwm,
-                channel=self.PAN_CHANNEL,
-                offset=int(self.fileStorage.get('PAN_OFFSET', defaultValue=0)),
+                channel=self.CAMERA_PAN_CHANNEL,
+                offset=int(self.fileStorage.get('CAMERA_PAN_OFFSET', defaultValue=0)),
             ),
             tiltServo=Servo.Servo(
                 pwm=self.pwm,
-                channel=self.TILT_CHANNEL,
-                offset=int(self.fileStorage.get('TILT_OFFSET', defaultValue=0)),
+                channel=self.CAMERA_TILT_CHANNEL,
+                offset=int(self.fileStorage.get('CAMERA_TILT_OFFSET', defaultValue=0)),
             ),
         )
 
