@@ -1,9 +1,12 @@
 import logging
 import smbus2
 import time
+import math
 
 
 class PWM(object):
+    FREQUENCY = 60
+
     _MODE1 = 0x00
     _MODE2 = 0x01
     _SUBADR1 = 0x02
@@ -46,6 +49,8 @@ class PWM(object):
         self.writeByteData(self._MODE1, mode1)
         time.sleep(0.005)
 
+        self.frequency = self.FREQUENCY
+
     def writeByteData(self, reg, value) -> None:
         """Write data to I2C with self.address"""
         logging.info('[PWM] Writing value %2X to %2X', value, reg)
@@ -67,8 +72,7 @@ class PWM(object):
 
     def runCommand(self, cmd):
         import subprocess
-        p = subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         result = p.stdout.read().decode('utf-8')
         status = p.poll()
         # print(result)
@@ -108,13 +112,36 @@ class PWM(object):
             for address in addresses:
                 print("  0x%s" % address)
         if "%02X" % self.address in addresses:
-            print(
-                "Wierd, I2C device is connected, Try to run the program again, If problem stills, email this information to support@sunfounder.com")
+            print("Wierd, I2C device is connected, Try to run the program again")
         else:
             print("Device is missing.")
-            print(
-                "Check the address or wiring of PCA9685 Server driver, or email this information to support@sunfounder.com")
+            print("Check the address or wiring of PCA9685 Server driver")
             quit()
+
+    @property
+    def frequency(self) -> int:
+        return self.self.FREQUENCY
+
+    @frequency.setter
+    def frequency(self, freq: int) -> None:
+        """Set PWM frequency"""
+        logging.info('[PWM] Set frequency to %d', freq)
+        prescale_value = 25000000.0
+        prescale_value /= 4096.0
+        prescale_value /= float(freq)
+        prescale_value -= 1.0
+        logging.info('[PWM] Setting PWM frequency to %d Hz', freq)
+        logging.info('[PWM] Estimated pre-scale: %d', prescale_value)
+        prescale = math.floor(prescale_value + 0.5)
+        logging.info('[PWM] Final pre-scale: %d', prescale)
+
+        old_mode = self.readByteData(self._MODE1);
+        new_mode = (old_mode & 0x7F) | 0x10
+        self.writeByteData(self._MODE1, new_mode)
+        self.writeByteData(self._PRESCALE, int(math.floor(prescale)))
+        self.writeByteData(self._MODE1, old_mode)
+        time.sleep(0.005)
+        self.writeByteData(self._MODE1, old_mode | 0x80)
 
     def write(self, channel, on, off) -> None:
         """Set on and off value on specific channel"""

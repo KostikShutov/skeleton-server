@@ -6,7 +6,6 @@ class Servo(object):
     MIN_PULSE_WIDTH = 600
     MAX_PULSE_WIDTH = 2400
     DEFAULT_PULSE_WIDTH = 1500
-    FREQUENCY = 60
 
     def __init__(self,
                  pwm: PCA9685,
@@ -25,7 +24,7 @@ class Servo(object):
     def angleToAnalog(self, angle) -> int:
         """ Calculate 12-bit analog value from giving angle """
         pulseWide = self.pwm.map(angle, 0, 180, self.MIN_PULSE_WIDTH, self.MAX_PULSE_WIDTH)
-        analogValue = int(float(pulseWide) / 1000000 * self.FREQUENCY * 4096)
+        analogValue = int(float(pulseWide) / 1000000 * self.pwm.frequency * 4096)
         logging.info('[Servo] Angle: %d, Analog value: %d', angle, analogValue)
         return analogValue
 
