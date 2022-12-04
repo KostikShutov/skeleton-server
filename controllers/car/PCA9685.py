@@ -1,7 +1,6 @@
 import logging
 import smbus2
 import time
-import math
 
 
 class PWM(object):
@@ -26,7 +25,9 @@ class PWM(object):
     _INVRT = 0x10
     _OUTDRV = 0x04
 
-    def __init__(self, busNumber: int = 1, address: int = 0x40) -> None:
+    def __init__(self,
+                 busNumber: int,
+                 address: int) -> None:
         self.busNumber = busNumber
         self.address = address
 
@@ -35,27 +36,26 @@ class PWM(object):
     def setup(self) -> None:
         """Init the class with busNumber and address"""
         logging.info('[PWM] Reseting PCA9685 MODE1 (without SLEEP) and MODE2')
-        self.write_all_value(0, 0)
-        self._write_byte_data(self._MODE2, self._OUTDRV)
-        self._write_byte_data(self._MODE1, self._ALLCALL)
+        self.writeAllValue(0, 0)
+        self.writeByteData(self._MODE2, self._OUTDRV)
+        self.writeByteData(self._MODE1, self._ALLCALL)
         time.sleep(0.005)
 
-        mode1 = self._read_byte_data(self._MODE1)
+        mode1 = self.readByteData(self._MODE1)
         mode1 = mode1 & ~self._SLEEP
-        self._write_byte_data(self._MODE1, mode1)
+        self.writeByteData(self._MODE1, mode1)
         time.sleep(0.005)
-        self._frequency = 60
 
-    def _write_byte_data(self, reg, value) -> None:
+    def writeByteData(self, reg, value) -> None:
         """Write data to I2C with self.address"""
         logging.info('[PWM] Writing value %2X to %2X', value, reg)
         try:
             self.bus.write_byte_data(self.address, reg, value)
         except Exception as i:
             print(i)
-            self._check_i2c()
+            self.check_i2c()
 
-    def _read_byte_data(self, reg):
+    def readByteData(self, reg):
         """Read data from I2C with self.address"""
         logging.info('[PWM] Reading value from %2X' % reg)
         try:
@@ -63,9 +63,9 @@ class PWM(object):
             return results
         except Exception as i:
             print(i)
-            self._check_i2c()
+            self.check_i2c()
 
-    def _run_command(self, cmd):
+    def runCommand(self, cmd):
         import subprocess
         p = subprocess.Popen(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -75,7 +75,7 @@ class PWM(object):
         # print(status)
         return status, result
 
-    def _check_i2c(self):
+    def check_i2c(self):
         from os import listdir
         print("I2C bus number is: %s" % self.busNumber)
         print("Checking I2C device:")
@@ -85,7 +85,7 @@ class PWM(object):
         else:
             print("Seems like I2C have not been set, run 'sudo raspi-config' to enable I2C")
         cmd = "i2cdetect -y %s" % self.busNumber
-        _, output = self._run_command(cmd)
+        _, output = self.runCommand(cmd)
         print("Your PCA9685 address is set to 0x%02X" % self.address)
         print("i2cdetect output:")
         print(output)
@@ -116,47 +116,21 @@ class PWM(object):
                 "Check the address or wiring of PCA9685 Server driver, or email this information to support@sunfounder.com")
             quit()
 
-    @property
-    def frequency(self) -> int:
-        return self._frequency
-
-    @frequency.setter
-    def frequency(self, freq) -> None:
-        """Set PWM frequency"""
-        logging.info('[PWM] Set frequency to %d', freq)
-        self._frequency = freq
-        prescale_value = 25000000.0
-        prescale_value /= 4096.0
-        prescale_value /= float(freq)
-        prescale_value -= 1.0
-        logging.info('[PWM] Setting PWM frequency to %d Hz', freq)
-        logging.info('[PWM] Estimated pre-scale: %d', prescale_value)
-        prescale = math.floor(prescale_value + 0.5)
-        logging.info('[PWM] Final pre-scale: %d', prescale)
-
-        old_mode = self._read_byte_data(self._MODE1);
-        new_mode = (old_mode & 0x7F) | 0x10
-        self._write_byte_data(self._MODE1, new_mode)
-        self._write_byte_data(self._PRESCALE, int(math.floor(prescale)))
-        self._write_byte_data(self._MODE1, old_mode)
-        time.sleep(0.005)
-        self._write_byte_data(self._MODE1, old_mode | 0x80)
-
     def write(self, channel, on, off) -> None:
         """Set on and off value on specific channel"""
         logging.info('[PWM] Set channel "%d" to value "%d"', channel, off)
-        self._write_byte_data(self._LED0_ON_L + 4 * channel, on & 0xFF)
-        self._write_byte_data(self._LED0_ON_H + 4 * channel, on >> 8)
-        self._write_byte_data(self._LED0_OFF_L + 4 * channel, off & 0xFF)
-        self._write_byte_data(self._LED0_OFF_H + 4 * channel, off >> 8)
+        self.writeByteData(self._LED0_ON_L + 4 * channel, on & 0xFF)
+        self.writeByteData(self._LED0_ON_H + 4 * channel, on >> 8)
+        self.writeByteData(self._LED0_OFF_L + 4 * channel, off & 0xFF)
+        self.writeByteData(self._LED0_OFF_H + 4 * channel, off >> 8)
 
-    def write_all_value(self, on, off) -> None:
+    def writeAllValue(self, on, off) -> None:
         """Set on and off value on all channel"""
         logging.info('[PWM] Set all channel to value "%d"', off)
-        self._write_byte_data(self._ALL_LED_ON_L, on & 0xFF)
-        self._write_byte_data(self._ALL_LED_ON_H, on >> 8)
-        self._write_byte_data(self._ALL_LED_OFF_L, off & 0xFF)
-        self._write_byte_data(self._ALL_LED_OFF_H, off >> 8)
+        self.writeByteData(self._ALL_LED_ON_L, on & 0xFF)
+        self.writeByteData(self._ALL_LED_ON_H, on >> 8)
+        self.writeByteData(self._ALL_LED_OFF_L, off & 0xFF)
+        self.writeByteData(self._ALL_LED_OFF_H, off >> 8)
 
     def map(self, x, in_min, in_max, out_min, out_max):
         """To map the value from arange to another"""

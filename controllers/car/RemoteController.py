@@ -6,7 +6,6 @@ from .. import ControllerInterface
 class RemoteController(ControllerInterface.ControllerInterface):
     BUS_NUMBER = 1
     ADDRESS = 0x40
-    FREQUENCY = 60
 
     LEFT_MOTOR_DIRECTION_CHANNEL = 17
     RIGHT_MOTOR_DIRECTION_CHANNEL = 27
