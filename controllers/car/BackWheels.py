@@ -21,7 +21,7 @@ class BackWheels(object):
         logging.info('[Back wheels] Set left wheel to %d, PWM channel to %d',
                      self.leftMotor.directionChannel, self.leftMotor.pwmChannel)
         logging.info('[Back wheels] Set right wheel to %d, PWM channel to %d',
-                     self.self.rightMotor.directionChannel, self.self.rightMotor.pwmChannel)
+                     self.rightMotor.directionChannel, self.rightMotor.pwmChannel)
 
     def forward(self) -> None:
         self.leftMotor.speed = self.speedService.getCurrentSpeed()
