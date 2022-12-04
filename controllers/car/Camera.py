@@ -21,10 +21,10 @@ class Camera(object):
         self.currentPan = self.READY_PAN
         self.currentTilt = self.READY_TILT
 
-        logging.info('[Camera] Pan servo channel: %d', self.panServo.channel)
-        logging.info('[Camera] Tilt servo channel: %d', self.tiltServo.channel)
-        logging.info('[Camera] Pan offset value: %d', self.panServo.offset)
-        logging.info('[Camera] Tilt offset value: %d', self.tiltServo.offset)
+        logging.info('[Camera] Pan servo PWM channel: %d', self.panServo.pwmChannel)
+        logging.info('[Camera] Pan servo offset: %d', self.panServo.offset)
+        logging.info('[Camera] Tilt servo PWM channel: %d', self.tiltServo.pwmChannel)
+        logging.info('[Camera] Tilt servo offset: %d', self.tiltServo.offset)
 
     def safePlus(self, variable: int, plusValue: int) -> int:
         variable += plusValue

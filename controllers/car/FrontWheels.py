@@ -11,8 +11,8 @@ class FrontWheels(object):
 
         logging.info('[Front wheels] Min angle: %d', self.angleService.getMinAngle())
         logging.info('[Front wheels] Max angle: %d', self.angleService.getMaxAngle())
-        logging.info('[Front wheels] PWM channel: %d', self.servo.channel)
-        logging.info('[Front wheels] Offset value: %d', self.servo.offset)
+        logging.info('[Front wheels] Servo PWM channel: %d', self.servo.pwmChannel)
+        logging.info('[Front wheels] Servo offset: %d', self.servo.offset)
 
     def turnLeft(self) -> None:
         self.angleService.setAngle(self.angleService.getMinAngle())

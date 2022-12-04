@@ -9,14 +9,14 @@ class Servo(object):
 
     def __init__(self,
                  pwm: PCA9685,
-                 channel: int,
+                 pwmChannel: int,
                  offset: int = 0,
                  ) -> None:
-        if channel < 0 or channel > 16:
-            raise ValueError("Servo channel \"{0}\" is not in (0, 15).".format(channel))
+        if pwmChannel < 0 or pwmChannel > 16:
+            raise ValueError("Servo channel \"{0}\" is not in (0, 15).".format(pwmChannel))
 
         self.pwm = pwm
-        self.channel = channel
+        self.pwmChannel = pwmChannel
         self.offset = offset
 
         self.write(90)
@@ -37,5 +37,5 @@ class Servo(object):
 
         val = self.angleToAnalog(angle)
         val += self.offset
-        self.pwm.write(self.channel, 0, val)
+        self.pwm.write(self.pwmChannel, 0, val)
         logging.info('[Servo] Turn angle to %d', angle)
