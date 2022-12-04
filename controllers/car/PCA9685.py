@@ -35,7 +35,7 @@ class PWM(object):
 
     def setup(self) -> None:
         """Init the class with busNumber and address"""
-        logging.info('[PWM] Reseting PCA9685 MODE1 (without SLEEP) and MODE2')
+        logging.info('[PWM] Resetting PCA9685 MODE1 (without SLEEP) and MODE2')
         self.writeAllValue(0, 0)
         self.writeByteData(self.MODE2, self.OUTDRV)
         self.writeByteData(self.MODE1, self.ALLCALL)
@@ -72,8 +72,8 @@ class PWM(object):
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         result = p.stdout.read().decode('utf-8')
         status = p.poll()
-        # print(result)
-        # print(status)
+        print(result)
+        print(status)
         return status, result
 
     def check_i2c(self):
@@ -92,14 +92,14 @@ class PWM(object):
         print(output)
         outputs = output.split('\n')[1:]
         addresses = []
-        for tmp_addresses in outputs:
-            tmp_addresses = tmp_addresses.split(':')
-            if len(tmp_addresses) < 2:
+        for tmpAddresses in outputs:
+            tmpAddresses = tmpAddresses.split(':')
+            if len(tmpAddresses) < 2:
                 continue
             else:
-                tmp_addresses = tmp_addresses[1]
-            tmp_addresses = tmp_addresses.strip().split(' ')
-            for address in tmp_addresses:
+                tmpAddresses = tmpAddresses[1]
+            tmpAddresses = tmpAddresses.strip().split(' ')
+            for address in tmpAddresses:
                 if address != '--':
                     addresses.append(address)
         print("Connected i2c device:")
@@ -123,22 +123,22 @@ class PWM(object):
     def frequency(self, freq: int) -> None:
         """Set PWM frequency"""
         logging.info('[PWM] Set frequency to %d', freq)
-        prescale_value = 25000000.0
-        prescale_value /= 4096.0
-        prescale_value /= float(freq)
-        prescale_value -= 1.0
+        preScaleValue = 25000000.0
+        preScaleValue /= 4096.0
+        preScaleValue /= float(freq)
+        preScaleValue -= 1.0
         logging.info('[PWM] Setting PWM frequency to %d Hz', freq)
-        logging.info('[PWM] Estimated pre-scale: %d', prescale_value)
-        prescale = math.floor(prescale_value + 0.5)
-        logging.info('[PWM] Final pre-scale: %d', prescale)
+        logging.info('[PWM] Estimated pre-scale: %d', preScaleValue)
+        preScale = math.floor(preScaleValue + 0.5)
+        logging.info('[PWM] Final pre-scale: %d', preScale)
 
-        old_mode = self.readByteData(self.MODE1)
-        new_mode = (old_mode & 0x7F) | 0x10
-        self.writeByteData(self.MODE1, new_mode)
-        self.writeByteData(self.PRESCALE, int(math.floor(prescale)))
-        self.writeByteData(self.MODE1, old_mode)
+        oldMode = self.readByteData(self.MODE1)
+        newMode = (oldMode & 0x7F) | 0x10
+        self.writeByteData(self.MODE1, newMode)
+        self.writeByteData(self.PRESCALE, int(math.floor(preScale)))
+        self.writeByteData(self.MODE1, oldMode)
         time.sleep(0.005)
-        self.writeByteData(self.MODE1, old_mode | 0x80)
+        self.writeByteData(self.MODE1, oldMode | 0x80)
 
     def write(self, channel, on, off) -> None:
         """Set on and off value on specific channel"""
