@@ -5,30 +5,30 @@ import math
 
 
 class PWM(object):
-    FREQUENCY = 60
-    BUS_NUMBER = 1
-    I2C_ADDRESS = 0x40
+    FREQUENCY: int = 60
+    BUS_NUMBER: int = 1
+    I2C_ADDRESS: int = 0x40
 
-    MODE1 = 0x00
-    MODE2 = 0x01
-    SUBADR1 = 0x02
-    SUBADR2 = 0x03
-    SUBADR3 = 0x04
-    PRESCALE = 0xFE
-    LED0_ON_L = 0x06
-    LED0_ON_H = 0x07
-    LED0_OFF_L = 0x08
-    LED0_OFF_H = 0x09
-    ALL_LED_ON_L = 0xFA
-    ALL_LED_ON_H = 0xFB
-    ALL_LED_OFF_L = 0xFC
-    ALL_LED_OFF_H = 0xFD
+    MODE1: int = 0x00
+    MODE2: int = 0x01
+    SUBADR1: int = 0x02
+    SUBADR2: int = 0x03
+    SUBADR3: int = 0x04
+    PRESCALE: int = 0xFE
+    LED0_ON_L: int = 0x06
+    LED0_ON_H: int = 0x07
+    LED0_OFF_L: int = 0x08
+    LED0_OFF_H: int = 0x09
+    ALL_LED_ON_L: int = 0xFA
+    ALL_LED_ON_H: int = 0xFB
+    ALL_LED_OFF_L: int = 0xFC
+    ALL_LED_OFF_H: int = 0xFD
 
-    RESTART = 0x80
-    SLEEP = 0x10
-    ALLCALL = 0x01
-    INVRT = 0x10
-    OUTDRV = 0x04
+    RESTART: int = 0x80
+    SLEEP: int = 0x10
+    ALLCALL: int = 0x01
+    INVRT: int = 0x10
+    OUTDRV: int = 0x04
 
     def __init__(self) -> None:
         self.bus = smbus2.SMBus(self.BUS_NUMBER)
@@ -48,7 +48,7 @@ class PWM(object):
 
         self.frequency = self.FREQUENCY
 
-    def writeByteData(self, reg, value) -> None:
+    def writeByteData(self, reg: int, value: int) -> None:
         """Write data to I2C with self.I2C_ADDRESS"""
         logging.info('[PWM] Writing value %2X to %2X', value, reg)
         try:
@@ -57,7 +57,7 @@ class PWM(object):
             print(i)
             self.check_i2c()
 
-    def readByteData(self, reg):
+    def readByteData(self, reg: int) -> int:
         """Read data from I2C with self.I2C_ADDRESS"""
         logging.info('[PWM] Reading value from %2X' % reg)
         try:
@@ -67,7 +67,7 @@ class PWM(object):
             print(i)
             self.check_i2c()
 
-    def runCommand(self, cmd):
+    def runCommand(self, cmd: str):
         import subprocess
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         result = p.stdout.read().decode('utf-8')
@@ -76,7 +76,7 @@ class PWM(object):
         print(status)
         return status, result
 
-    def check_i2c(self):
+    def check_i2c(self) -> None:
         from os import listdir
         print("I2C bus number is: %s" % self.BUS_NUMBER)
         print("Checking I2C device:")
@@ -140,7 +140,7 @@ class PWM(object):
         time.sleep(0.005)
         self.writeByteData(self.MODE1, oldMode | 0x80)
 
-    def write(self, channel, on, off) -> None:
+    def write(self, channel: int, on: int, off: int) -> None:
         """Set on and off value on specific channel"""
         logging.info('[PWM] Set channel "%d" to value "%d"', channel, off)
         self.writeByteData(self.LED0_ON_L + 4 * channel, on & 0xFF)
@@ -148,7 +148,7 @@ class PWM(object):
         self.writeByteData(self.LED0_OFF_L + 4 * channel, off & 0xFF)
         self.writeByteData(self.LED0_OFF_H + 4 * channel, off >> 8)
 
-    def writeAllValue(self, on, off) -> None:
+    def writeAllValue(self, on: int, off: int) -> None:
         """Set on and off value on all channel"""
         logging.info('[PWM] Set all channel to value "%d"', off)
         self.writeByteData(self.ALL_LED_ON_L, on & 0xFF)
@@ -156,6 +156,6 @@ class PWM(object):
         self.writeByteData(self.ALL_LED_OFF_L, off & 0xFF)
         self.writeByteData(self.ALL_LED_OFF_H, off >> 8)
 
-    def map(self, x, in_min, in_max, out_min, out_max):
+    def map(self, x: int, inMin: int, inMax: int, outMin: int, outMax: int):
         """To map the value from arange to another"""
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin

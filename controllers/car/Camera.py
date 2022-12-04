@@ -3,14 +3,14 @@ from . import Servo
 
 
 class Camera(object):
-    READY_PAN = 90  # Ready position angle
-    READY_TILT = 90  # Ready position angle
-    CALI_PAN = 90  # Calibration position angle
-    CALI_TILT = 90  # Calibration position angle
+    READY_PAN: int = 90  # Ready position angle
+    READY_TILT: int = 90  # Ready position angle
+    CALI_PAN: int = 90  # Calibration position angle
+    CALI_TILT: int = 90  # Calibration position angle
 
-    CAMERA_DELAY = 0.005
-    PAN_STEP = 15  # Pan step = 5 degree
-    TILT_STEP = 10  # Tilt step = 5 degree
+    CAMERA_DELAY: float = 0.005
+    PAN_STEP: int = 15  # Pan step = 5 degree
+    TILT_STEP: int = 10  # Tilt step = 5 degree
 
     def __init__(self,
                  panServo: Servo,

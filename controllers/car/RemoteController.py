@@ -4,20 +4,20 @@ from .. import ControllerInterface
 
 
 class RemoteController(ControllerInterface.ControllerInterface):
-    FRONT_OFFSET = -21
-    CAMERA_PAN_OFFSET = -23
-    CAMERA_TILT_OFFSET = 18
-    BACK_LEFT_OFFSET = 0
-    BACK_RIGHT_OFFSET = 0
+    FRONT_OFFSET: int = -21
+    CAMERA_PAN_OFFSET: int = -23
+    CAMERA_TILT_OFFSET: int = 18
+    BACK_LEFT_OFFSET: int = 0
+    BACK_RIGHT_OFFSET: int = 0
 
-    FRONT_PWM_CHANNEL = 0
-    CAMERA_PAN_PWM_CHANNEL = 1
-    CAMERA_TILT_PWM_CHANNEL = 2
-    BACK_LEFT_PWM_CHANNEL = 4
-    BACK_RIGHT_PWM_CHANNEL = 5
+    FRONT_PWM_CHANNEL: int = 0
+    CAMERA_PAN_PWM_CHANNEL: int = 1
+    CAMERA_TILT_PWM_CHANNEL: int = 2
+    BACK_LEFT_PWM_CHANNEL: int = 4
+    BACK_RIGHT_PWM_CHANNEL: int = 5
 
-    BACK_LEFT_DIRECTION_CHANNEL = 17
-    BACK_RIGHT_DIRECTION_CHANNEL = 27
+    BACK_LEFT_DIRECTION_CHANNEL: int = 17
+    BACK_RIGHT_DIRECTION_CHANNEL: int = 27
 
     def __init__(self) -> None:
         logging.root.setLevel(logging.INFO)
