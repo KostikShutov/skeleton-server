@@ -6,6 +6,7 @@ from .. import ControllerInterface
 class RemoteController(ControllerInterface.ControllerInterface):
     def __init__(self) -> None:
         logging.root.setLevel(logging.INFO)
+        logging.basicConfig(format='%(asctime)s %(message)s')
 
         self.angleService = AngleService.AngleService()
         self.speedService = SpeedService.SpeedService()
