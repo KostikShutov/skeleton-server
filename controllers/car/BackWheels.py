@@ -1,16 +1,14 @@
 import logging
-from . import PCA9685, TB6612, SpeedService
+from . import TB6612, SpeedService
 
 
 class BackWheels(object):
     def __init__(self,
                  speedService: SpeedService,
-                 pwm: PCA9685,
                  leftMotor: TB6612,
                  rightMotor: TB6612
                  ) -> None:
         self.speedService = speedService
-        self.pwm = pwm
         self.leftMotor = leftMotor
         self.rightMotor = rightMotor
 

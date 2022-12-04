@@ -36,7 +36,6 @@ class RemoteController(ControllerInterface.ControllerInterface):
 
         self.backWheels = BackWheels.BackWheels(
             speedService=self.speedService,
-            pwm=self.pwm,
             leftMotor=TB6612.Motor(
                 pwm=self.pwm,
                 pwmChannel=self.BACK_LEFT_MOTOR_CHANNEL,
