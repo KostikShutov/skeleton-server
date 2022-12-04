@@ -6,47 +6,29 @@ class Servo(object):
     MIN_PULSE_WIDTH = 600
     MAX_PULSE_WIDTH = 2400
     DEFAULT_PULSE_WIDTH = 1500
-    FREQUENCY = 60
 
-    def __init__(self, channel: int, offset: int = 0, lock: bool = True, busNumber: int = 1, address=0x40) -> None:
+    def __init__(self,
+                 pwm: PCA9685,
+                 channel: int,
+                 offset: int = 0,
+                 lock: bool = True,
+                 ) -> None:
         if channel < 0 or channel > 16:
             raise ValueError("Servo channel \"{0}\" is not in (0, 15).".format(channel))
+
+        self.pwm = pwm
         self.channel = channel
         self.offset = offset
         self.lock = lock
 
-        self.pwm = PCA9685.PWM(busNumber=busNumber, address=address)
-        self.frequency = self.FREQUENCY
         self.write(90)
-
-    def setup(self) -> None:
-        self.pwm.setup()
 
     def _angle_to_analog(self, angle) -> int:
         """ Calculate 12-bit analog value from giving angle """
         pulseWide = self.pwm.map(angle, 0, 180, self.MIN_PULSE_WIDTH, self.MAX_PULSE_WIDTH)
-        analogValue = int(float(pulseWide) / 1000000 * self.frequency * 4096)
+        analogValue = int(float(pulseWide) / 1000000 * self.pwm.frequency * 4096)
         logging.info('[Servo] Angle: %d, Analog value: %d', angle, analogValue)
         return analogValue
-
-    @property
-    def frequency(self) -> int:
-        return self._frequency
-
-    @frequency.setter
-    def frequency(self, value) -> None:
-        self._frequency = value
-        self.pwm.frequency = value
-
-    @property
-    def offset(self) -> int:
-        return self._offset
-
-    @offset.setter
-    def offset(self, value: int) -> None:
-        """ Set offset for much user-friendly """
-        self._offset = value
-        logging.info('[Servo] Set offset to %d', self.offset)
 
     def write(self, angle: int) -> None:
         """ Turn the servo with giving angle. """

@@ -5,7 +5,6 @@ import math
 
 
 class PWM(object):
-    """A PWM control class for PCA9685."""
     _MODE1 = 0x00
     _MODE2 = 0x01
     _SUBADR1 = 0x02
@@ -27,9 +26,10 @@ class PWM(object):
     _INVRT = 0x10
     _OUTDRV = 0x04
 
-    def __init__(self, busNumber: int = 1, address=0x40) -> None:
-        self.address = address
+    def __init__(self, busNumber: int = 1, address: int = 0x40) -> None:
         self.busNumber = busNumber
+        self.address = address
+
         self.bus = smbus2.SMBus(self.busNumber)
 
     def setup(self) -> None:

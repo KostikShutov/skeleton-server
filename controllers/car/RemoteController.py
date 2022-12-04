@@ -1,27 +1,74 @@
 import logging
-from . import AngleService, SpeedService, FrontWheels, BackWheels, Camera, PCA9685
+from . import AngleService, SpeedService, FrontWheels, BackWheels, Camera, PCA9685, Servo, FileStorage, TB6612
 from .. import ControllerInterface
 
 
 class RemoteController(ControllerInterface.ControllerInterface):
+    BUS_NUMBER = 1
+    ADDRESS = 0x40
+    FREQUENCY = 60
+
+    LEFT_MOTOR_DIRECTION_CHANNEL = 17
+    RIGHT_MOTOR_DIRECTION_CHANNEL = 27
+
+    FRONT_WHEEL_CHANNEL = 0
+    PAN_CHANNEL = 1  # Pan servo channel
+    TILT_CHANNEL = 2  # Tilt servo channel
+    LEFT_MOTOR_PWM_CHANNEL = 4
+    RIGHT_MOTOR_PWM_CHANNEL = 5
+
     def __init__(self) -> None:
         logging.root.setLevel(logging.INFO)
         logging.basicConfig(format='%(asctime)s %(message)s')
 
+        self.fileStorage = FileStorage.FileStorage()
         self.angleService = AngleService.AngleService()
         self.speedService = SpeedService.SpeedService()
+        self.pwm = PCA9685.PWM(busNumber=self.BUS_NUMBER, address=self.ADDRESS)
 
-        self.frontWheels = FrontWheels.FrontWheels(self.angleService)
-        self.backWheels = BackWheels.BackWheels(self.speedService)
-        self.camera = Camera.Camera()
+        self.frontWheels = FrontWheels.FrontWheels(
+            angleService=self.angleService,
+            servo=Servo.Servo(
+                pwm=self.pwm,
+                channel=self.FRONT_WHEEL_CHANNEL,
+                offset=int(self.fileStorage.get('TURNING_OFFSET', defaultValue=0)),
+            ),
+        )
+
+        self.backWheels = BackWheels.BackWheels(
+            speedService=self.speedService,
+            pwm=self.pwm,
+            leftMotor=TB6612.Motor(
+                pwm=self.pwm,
+                pwmChannel=self.LEFT_MOTOR_PWM_CHANNEL,
+                directionChannel=self.LEFT_MOTOR_DIRECTION_CHANNEL,
+                offset=bool(int(self.fileStorage.get('LEFT_MOTOR_OFFSET', defaultValue=1))),
+            ),
+            rightMotor=TB6612.Motor(
+                pwm=self.pwm,
+                pwmChannel=self.RIGHT_MOTOR_PWM_CHANNEL,
+                directionChannel=self.RIGHT_MOTOR_DIRECTION_CHANNEL,
+                offset=bool(int(self.fileStorage.get('RIGHT_MOTOR_OFFSET', defaultValue=1))),
+            ),
+        )
+
+        self.camera = Camera.Camera(
+            panServo=Servo.Servo(
+                pwm=self.pwm,
+                channel=self.PAN_CHANNEL,
+                offset=int(self.fileStorage.get('PAN_OFFSET', defaultValue=0)),
+            ),
+            tiltServo=Servo.Servo(
+                pwm=self.pwm,
+                channel=self.TILT_CHANNEL,
+                offset=int(self.fileStorage.get('TILT_OFFSET', defaultValue=0)),
+            ),
+        )
 
         self.frontWheels.ready()
         self.backWheels.ready()
         self.camera.ready()
-
-        pwm = PCA9685.PWM(busNumber=1)
-        pwm.setup()
-        pwm.frequency = 60
+        self.pwm.setup()
 
     def init(self):
         return {

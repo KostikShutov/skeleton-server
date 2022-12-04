@@ -1,11 +1,17 @@
 import logging
 import RPi.GPIO as GPIO
+from . import PCA9685
 
 
 class Motor(object):
-    def __init__(self, directionChannel: int, pwm=None, offset: bool = True) -> None:
+    def __init__(self,
+                 pwm: PCA9685,
+                 pwmChannel: int,
+                 directionChannel: int,
+                 offset: bool = True) -> None:
+        self.pwm = pwm
+        self.pwmChannel = pwmChannel
         self.directionChannel = directionChannel
-        self._pwm = pwm
         self._offset = offset
         self.forwardOffset = self._offset
         self.backwardOffset = not self.forwardOffset
@@ -16,8 +22,6 @@ class Motor(object):
         GPIO.setup(self.directionChannel, GPIO.OUT)
 
         logging.info('[Motor] Setup motor direction channel at %s', self.directionChannel)
-        logging.info('[Motor] Setup motor pwm channel')
-        # logging.info('[Motor] Setup motor pwm channel as %s', self._pwm.__name__)
 
     @property
     def speed(self) -> int:
@@ -27,12 +31,10 @@ class Motor(object):
     def speed(self, speed) -> None:
         if speed not in range(0, 101):
             raise ValueError('Speed ranges from 0 to 100, not "{0}"'.format(speed))
-        if not callable(self._pwm):
-            raise ValueError(
-                'pwm is not callable, please set Motor.pwm to a pwm control function with only 1 variable speed')
         logging.info('[Motor] Set speed to %s', speed)
         self._speed = speed
-        self._pwm(self._speed)
+        pulseWide = int(self.pwm.map(self._speed, 0, 100, 0, 4095))
+        self.pwm.write(self.pwmChannel, 0, pulseWide)
 
     def forward(self) -> None:
         GPIO.output(self.directionChannel, self.forwardOffset)
@@ -57,12 +59,3 @@ class Motor(object):
         self.forwardOffset = value
         self.backwardOffset = not self.forwardOffset
         logging.info('[Motor] Set offset to %d', self._offset)
-
-    @property
-    def pwm(self):
-        return self._pwm
-
-    @pwm.setter
-    def pwm(self, pwm) -> None:
-        self._pwm = pwm
-        logging.info('[Motor] Set pwm')

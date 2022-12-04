@@ -1,11 +1,8 @@
 import logging
-from . import FileStorage, Servo
+from . import Servo
 
 
 class Camera(object):
-    PAN_CHANNEL = 1  # Pan servo channel
-    TILT_CHANNEL = 2  # Tilt servo channel
-
     READY_PAN = 90  # Ready position angle
     READY_TILT = 90  # Ready position angle
     CALI_PAN = 90  # Calibration position angle
@@ -15,21 +12,19 @@ class Camera(object):
     PAN_STEP = 15  # Pan step = 5 degree
     TILT_STEP = 10  # Tilt step = 5 degree
 
-    def __init__(self, busNumber: int = 1) -> None:
-        self.fileStorage = FileStorage.FileStorage()
-        self.panOffset = int(self.fileStorage.get('PAN_OFFSET', defaultValue=0))
-        self.tiltOffset = int(self.fileStorage.get('TILT_OFFSET', defaultValue=0))
+    def __init__(self,
+                 panServo: Servo,
+                 tiltServo: Servo) -> None:
+        self.panServo = panServo
+        self.tiltServo = tiltServo
 
-        self.panServo = Servo.Servo(self.PAN_CHANNEL, busNumber=busNumber, offset=self.panOffset)
-        self.tiltServo = Servo.Servo(self.TILT_CHANNEL, busNumber=busNumber, offset=self.tiltOffset)
+        self.currentPan = self.READY_PAN
+        self.currentTilt = self.READY_TILT
 
-        self.currentPan = 0
-        self.currentTilt = 0
-
-        logging.info('[Camera] Pan servo channel: %d', self.PAN_CHANNEL)
-        logging.info('[Camera] Tilt servo channel: %d', self.TILT_CHANNEL)
-        logging.info('[Camera] Pan offset value: %d', self.panOffset)
-        logging.info('[Camera] Tilt offset value: %d', self.tiltOffset)
+        logging.info('[Camera] Pan servo channel: %d', self.panServo.channel)
+        logging.info('[Camera] Tilt servo channel: %d', self.tiltServo.channel)
+        logging.info('[Camera] Pan offset value: %d', self.panServo.offset)
+        logging.info('[Camera] Tilt offset value: %d', self.tiltServo.offset)
 
     def safePlus(self, variable: int, plusValue: int) -> int:
         variable += plusValue
@@ -60,8 +55,6 @@ class Camera(object):
         logging.info('[Camera] Turn down at step: %d', step)
 
     def ready(self) -> None:
-        self.panServo.offset = self.panOffset
-        self.tiltServo.offset = self.tiltOffset
         self.currentPan = self.READY_PAN
         self.currentTilt = self.READY_TILT
         self.panServo.write(self.currentPan)

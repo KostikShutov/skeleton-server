@@ -1,25 +1,18 @@
 import logging
-from . import FileStorage, Servo, AngleService
+from . import Servo, AngleService
 
 
 class FrontWheels(object):
-    FRONT_WHEEL_CHANNEL = 0
-
     def __init__(self,
                  angleService: AngleService,
-                 busNumber: int = 1,
-                 channel: int = FRONT_WHEEL_CHANNEL) -> None:
-        self.fileStorage = FileStorage.FileStorage()
+                 servo: Servo) -> None:
         self.angleService = angleService
-
-        self.channel = channel
-        self.turningOffset = int(self.fileStorage.get('TURNING_OFFSET', defaultValue=0))
-        self.servo = Servo.Servo(self.channel, busNumber=busNumber, offset=self.turningOffset)
+        self.servo = servo
 
         logging.info('[Front wheels] Min angle: %d', self.angleService.getMinAngle())
         logging.info('[Front wheels] Max angle: %d', self.angleService.getMaxAngle())
-        logging.info('[Front wheels] PWM channel: %d', self.channel)
-        logging.info('[Front wheels] Offset value: %d', self.turningOffset)
+        logging.info('[Front wheels] PWM channel: %d', self.servo.channel)
+        logging.info('[Front wheels] Offset value: %d', self.servo.offset)
 
     def turnLeft(self) -> None:
         self.angleService.setAngle(self.angleService.getMinAngle())
@@ -42,6 +35,5 @@ class FrontWheels(object):
         logging.info('[Front wheels] Turn angle to %d', self.angleService.getCurrentAngle())
 
     def ready(self) -> None:
-        self.servo.offset = self.turningOffset
         self.turnStraight()
         logging.info('[Front wheels] Turn to ready position')

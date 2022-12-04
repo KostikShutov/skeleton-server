@@ -1,42 +1,27 @@
 import logging
-from . import FileStorage, PCA9685, TB6612, SpeedService
+from . import PCA9685, TB6612, SpeedService
 
 
 class BackWheels(object):
-    MOTOR_A = 17
-    MOTOR_B = 27
-
-    PWM_A = 4
-    PWM_B = 5
-
-    def __init__(self, speedService: SpeedService, busNumber: int = 1) -> None:
-        self.fileStorage = FileStorage.FileStorage()
+    def __init__(self,
+                 speedService: SpeedService,
+                 pwm: PCA9685,
+                 leftMotor: TB6612,
+                 rightMotor: TB6612
+                 ) -> None:
         self.speedService = speedService
-
-        self.forwardA = bool(int(self.fileStorage.get('FORWARD_A', defaultValue=1)))
-        self.forwardB = bool(int(self.fileStorage.get('FORWARD_B', defaultValue=1)))
-
-        self.leftMotor = TB6612.Motor(self.MOTOR_A, offset=self.forwardA)
-        self.rightMotor = TB6612.Motor(self.MOTOR_B, offset=self.forwardB)
-
-        self.pwm = PCA9685.PWM(busNumber=busNumber)
-
-        def _set_a_pwm(value) -> None:
-            pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
-            self.pwm.write(self.PWM_A, 0, pulse_wide)
-
-        def _set_b_pwm(value) -> None:
-            pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
-            self.pwm.write(self.PWM_B, 0, pulse_wide)
-
-        self.leftMotor.pwm = _set_a_pwm
-        self.rightMotor.pwm = _set_b_pwm
+        self.pwm = pwm
+        self.leftMotor = leftMotor
+        self.rightMotor = rightMotor
 
         logging.info('[Back wheels] Min speed: %s', self.speedService.getMinSpeed())
         logging.info('[Back wheels] Max speed: %s', self.speedService.getMaxSpeed())
-        logging.info('[Back wheels] Forward A: %s, Forward B: %s', self.forwardA, self.forwardB)
-        logging.info('[Back wheels] Set left wheel to %d, PWM channel to %d', self.MOTOR_A, self.PWM_A)
-        logging.info('[Back wheels] Set right wheel to %d, PWM channel to %d', self.MOTOR_B, self.PWM_B)
+        logging.info('[Back wheels] Left motor offset: %s', self.leftMotor.offset)
+        logging.info('[Back wheels] Right motor offset: %s', self.rightMotor.offset)
+        logging.info('[Back wheels] Set left wheel to %d, PWM channel to %d',
+                     self.leftMotor.directionChannel, self.leftMotor.pwmChannel)
+        logging.info('[Back wheels] Set right wheel to %d, PWM channel to %d',
+                     self.self.rightMotor.directionChannel, self.self.rightMotor.pwmChannel)
 
     def forward(self) -> None:
         self.leftMotor.speed = self.speedService.getCurrentSpeed()
@@ -58,7 +43,5 @@ class BackWheels(object):
         logging.info('[Back wheels] Stop')
 
     def ready(self) -> None:
-        self.leftMotor.offset = self.forwardA
-        self.rightMotor.offset = self.forwardB
         self.stop()
         logging.info('[Back wheels] Turn to ready position')
