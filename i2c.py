@@ -37,8 +37,8 @@ def getRevision(cpuNumber: str):
         return cpuNumber
 
 
-def getBusNumber() -> int:
-    revision = getRevision()
+def getBusNumber(cpuNumber: int) -> int:
+    revision = getRevision(cpuNumber)
     if revision in [2, 3, 4]:
         return 1
     elif revision in [0, 1]:
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     time.sleep(1)
     print('Your Raspberry Pi is Revision: %s' % getRevision(cpuNumber))
     time.sleep(1)
-    busNumber = getBusNumber()
+    busNumber = getBusNumber(cpuNumber)
     print('Your I2C bus number is: %s' % busNumber)
     time.sleep(1)
     print('')
