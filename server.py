@@ -6,13 +6,13 @@ import json
 from dotenv import dotenv_values
 
 
-def mergeConfigs(firstConfig, secondConfig):
+def mergeConfigs(firstConfig: dict, secondConfig: dict) -> dict:
     result = firstConfig.copy()
     result.update(secondConfig)
     return result
 
 
-config = mergeConfigs(dotenv_values('.env'), dotenv_values('.env.local'))
+config: dict = mergeConfigs(dotenv_values('.env'), dotenv_values('.env.local'))
 print(config)
 
 if config['CONTROLLER'] == 'car_remote':
@@ -30,8 +30,8 @@ app = socketio.WSGIApp(sio)
 
 # ============== General =============
 @sio.event
-def connect(sid, environ, auth):
-    token = auth['token']
+def connect(sid: str, environ: str, auth: dict) -> None:
+    token: str = auth['token']
 
     if token != 'secret':
         raise ConnectionRefusedError('Authentication failed')
@@ -41,80 +41,80 @@ def connect(sid, environ, auth):
 
 
 @sio.event
-def disconnect(sid):
+def disconnect(sid: str) -> None:
     controller.stop()
     print('Disconnect (%s)' % sid)
 
 
 @sio.event
-def health(sid):
+def health(sid: str) -> None:
     print('Health (%s)' % sid)
 
 
 @sio.event
-def init(sid):
+def init(sid: str) -> str:
     return json.dumps(controller.init())
 
 
 # ============== Movement =============
 @sio.event
-def forward(sid, data):
+def forward(sid: str, data) -> None:
     controller.forward(int(data['speed']))
 
 
 @sio.event
-def backward(sid, data):
+def backward(sid: str, data) -> None:
     controller.backward(int(data['speed']))
 
 
 @sio.event
-def stop(sid):
+def stop(sid: str) -> None:
     controller.stop()
 
 
 @sio.event
-def left(sid):
+def left(sid: str) -> None:
     controller.left()
 
 
 @sio.event
-def straight(sid):
+def straight(sid: str) -> None:
     controller.straight()
 
 
 @sio.event
-def right(sid):
+def right(sid: str) -> None:
     controller.right()
 
 
 @sio.event
-def turn(sid, data):
+def turn(sid: str, data) -> None:
     controller.turn(int(data['angle']))
 
 
 @sio.event
-def angle(sid):
+def angle(sid: str) -> None:
     return controller.angle()
 
 
 # ================ Camera =================
 @sio.event
-def cameraLeft(sid):
+def cameraLeft(sid: str) -> None:
     controller.cameraLeft()
 
 
 @sio.event
-def cameraRight(sid):
+def cameraRight(sid: str) -> None:
     controller.cameraRight()
 
 
 @sio.event
-def cameraUp(sid):
+def cameraUp(sid: str) -> None:
     controller.cameraUp()
 
 
 @sio.event
-def cameraDown(sid):
+def cameraDown(sid: str) -> None:
     controller.cameraDown()
 
 
