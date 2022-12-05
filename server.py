@@ -31,18 +31,18 @@ app = socketio.WSGIApp(sio)
 # ============== General =============
 @sio.event
 def connect(sid, environ):
-    print('Connect ', sid)
+    print('Connect: %s %s' % (sid, environ))
 
 
 @sio.event
 def disconnect(sid):
     controller.stop()
-    print('Disconnect ', sid)
+    print('Disconnect: %s' % sid)
 
 
 @sio.event
 def health(sid):
-    print('Health ', sid)
+    print('Health: %s' % sid)
 
 
 @sio.event
