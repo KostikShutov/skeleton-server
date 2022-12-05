@@ -31,6 +31,12 @@ app = socketio.WSGIApp(sio)
 # ============== General =============
 @sio.event
 def connect(sid, environ, auth):
+    token = auth['token']
+
+    if token != 'secret':
+        raise ConnectionRefusedError('Authentication failed')
+
+    sio.save_session(sid, {'token': token})
     print('Connect (%s)' % sid)
 
 
