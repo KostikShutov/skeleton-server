@@ -53,9 +53,8 @@ class PWM(object):
         logging.info('[PWM] Writing value %2X to %2X', value, reg)
         try:
             self.bus.write_byte_data(self.I2C_ADDRESS, reg, value)
-        except Exception as i:
-            print(i)
-            self.check_i2c()
+        except Exception as e:
+            print('Run i2c.py for setting i2c:', e)
 
     def readByteData(self, reg: int) -> int:
         """Read data from I2C with self.I2C_ADDRESS"""
@@ -63,57 +62,8 @@ class PWM(object):
         try:
             results = self.bus.read_byte_data(self.I2C_ADDRESS, reg)
             return results
-        except Exception as i:
-            print(i)
-            self.check_i2c()
-
-    def runCommand(self, cmd: str):
-        import subprocess
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        result = p.stdout.read().decode('utf-8')
-        status = p.poll()
-        print(result)
-        print(status)
-        return status, result
-
-    def check_i2c(self) -> None:
-        from os import listdir
-        print("I2C bus number is: %s" % self.BUS_NUMBER)
-        print("Checking I2C device:")
-        devices = listdir("/dev/")
-        if "i2c-%d" % self.BUS_NUMBER in devices:
-            print("I2C device exist.")
-        else:
-            print("Seems like I2C have not been set, run 'sudo raspi-config' to enable I2C")
-        cmd = "i2cdetect -y %s" % self.BUS_NUMBER
-        _, output = self.runCommand(cmd)
-        print("Your PCA9685 address is set to 0x%02X" % self.I2C_ADDRESS)
-        print("i2cdetect output:")
-        print(output)
-        outputs = output.split('\n')[1:]
-        addresses = []
-        for tmpAddresses in outputs:
-            tmpAddresses = tmpAddresses.split(':')
-            if len(tmpAddresses) < 2:
-                continue
-            else:
-                tmpAddresses = tmpAddresses[1]
-            tmpAddresses = tmpAddresses.strip().split(' ')
-            for address in tmpAddresses:
-                if address != '--':
-                    addresses.append(address)
-        print("Connected i2c device:")
-        if addresses == []:
-            print("None")
-        else:
-            for address in addresses:
-                print("  0x%s" % address)
-        if "%02X" % self.I2C_ADDRESS in addresses:
-            print("Wierd, I2C device is connected, Try to run the program again")
-        else:
-            print("Device is missing.")
-            print("Check the address or wiring of PCA9685 Server driver")
-            quit()
+        except Exception as e:
+            print('Run i2c.py for setting i2c:', e)
 
     @property
     def frequency(self) -> int:
