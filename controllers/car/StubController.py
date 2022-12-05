@@ -18,51 +18,51 @@ class StubController(ControllerInterface.ControllerInterface):
         }
 
     def forward(self, speed) -> None:
-        print('forward (speed: %s)' % speed)
+        print('Forward (speed: %s)' % speed)
 
     def backward(self, speed) -> None:
-        print('backward (speed: %s)' % speed)
+        print('Backward (speed: %s)' % speed)
 
     def stop(self) -> None:
-        print('stop')
+        print('Stop')
 
     def left(self) -> None:
         oldAngle = self.angleService.getCurrentAngle()
         self.angleService.setAngle(oldAngle - 45)
         newAngle = self.angleService.getCurrentAngle()
-        print("left (oldAngle: %s, newAngle: %s)" % (oldAngle, newAngle))
+        print('Left (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def straight(self) -> None:
         oldAngle = self.angleService.getCurrentAngle()
         self.angleService.setAngle(90)
         newAngle = self.angleService.getCurrentAngle()
-        print('straight (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        print('Straight (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def right(self) -> None:
         oldAngle = self.angleService.getCurrentAngle()
         self.angleService.setAngle(oldAngle + 45)
         newAngle = self.angleService.getCurrentAngle()
-        print('right (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        print('Right (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def turn(self, angle) -> None:
         oldAngle = self.angleService.getCurrentAngle()
         self.angleService.setAngle(angle)
         newAngle = self.angleService.getCurrentAngle()
-        print('turn (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        print('Turn (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def angle(self) -> int:
         angle = self.angleService.getCurrentAngle()
-        print('angle (currentAngle: %s)' % angle)
+        print('Angle (currentAngle: %s)' % angle)
         return angle
 
     def cameraLeft(self) -> None:
-        print('cameraLeft')
+        print('Camera left')
 
     def cameraRight(self) -> None:
-        print('cameraRight')
+        print('Camera right')
 
     def cameraUp(self) -> None:
-        print('cameraUp')
+        print('Camera up')
 
     def cameraDown(self) -> None:
-        print('cameraDown')
+        print('Camera down')
