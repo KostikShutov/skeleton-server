@@ -1,12 +1,14 @@
 import controllers.car.AngleService as AngleService
 import controllers.car.SpeedService as SpeedService
 import controllers.ControllerInterface as ControllerInterface
+import commands.CommandPusher as CommandPusher
 
 
 class StubController(ControllerInterface.ControllerInterface):
     def __init__(self) -> None:
         self.angleService = AngleService.AngleService()
         self.speedService = SpeedService.SpeedService()
+        self.commandPusher = CommandPusher.CommandPusher()
 
     def init(self):
         return {
@@ -18,10 +20,13 @@ class StubController(ControllerInterface.ControllerInterface):
             'currentSpeed': self.speedService.getCurrentSpeed()
         }
 
-    def forward(self, speed) -> None:
+    def pushCommand(self, payload: object) -> None:
+        self.commandPusher.pushCommand(payload)
+
+    def forward(self, speed: int) -> None:
         print('Forward (speed: %s)' % speed)
 
-    def backward(self, speed) -> None:
+    def backward(self, speed: int) -> None:
         print('Backward (speed: %s)' % speed)
 
     def stop(self) -> None:

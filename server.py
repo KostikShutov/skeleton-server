@@ -3,29 +3,12 @@
 import eventlet
 import socketio
 import json
-from dotenv import dotenv_values
+import controllers.ControllerInterface as ControllerInterface
+import controllers.ControllerResolver as ControllerResolver
 
-
-def mergeConfigs(firstConfig: dict, secondConfig: dict) -> dict:
-    result = firstConfig.copy()
-    result.update(secondConfig)
-    return result
-
-
-config: dict = mergeConfigs(dotenv_values('.env'), dotenv_values('.env.local'))
-print(config)
-
-if config['CONTROLLER'] == 'car_remote':
-    from controllers.car import RemoteController
-    controller = RemoteController.RemoteController()
-elif config['CONTROLLER'] == 'car_stub':
-    from controllers.car import StubController
-    controller = StubController.StubController()
-else:
-    raise Exception('Unknown controller')
-
-sio = socketio.Server(cors_allowed_origins='*')
-app = socketio.WSGIApp(sio)
+controller: ControllerInterface = ControllerResolver.ControllerResolver().resolve()
+sio: socketio.Server = socketio.Server(cors_allowed_origins='*')
+app: socketio.WSGIApp = socketio.WSGIApp(sio)
 
 
 # ============== General =============
@@ -56,14 +39,19 @@ def init(sid: str) -> str:
     return json.dumps(controller.init())
 
 
+@sio.event
+def pushCommand(sid: str, data: object) -> None:
+    return controller.pushCommand(data)
+
+
 # ============== Movement =============
 @sio.event
-def forward(sid: str, data) -> None:
+def forward(sid: str, data: object) -> None:
     controller.forward(int(data['speed']))
 
 
 @sio.event
-def backward(sid: str, data) -> None:
+def backward(sid: str, data: object) -> None:
     controller.backward(int(data['speed']))
 
 

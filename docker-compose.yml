@@ -14,8 +14,7 @@ services:
     environment:
       PYTHONPATH: /code
   rabbitmq-picar:
-    image: rabbitmq:latest
+    image: rabbitmq:management
     container_name: rabbitmq-picar-container
-  redis-picar:
-    image: redis:latest
-    container_name: redis-picar-container
+    ports:
+      - "1003:15672"

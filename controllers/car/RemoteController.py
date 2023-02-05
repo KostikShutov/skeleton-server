@@ -8,6 +8,7 @@ import controllers.car.PCA9685 as PCA9685
 import controllers.car.Servo as Servo
 import controllers.car.TB6612 as TB6612
 import controllers.ControllerInterface as ControllerInterface
+import commands.CommandPusher as CommandPusher
 
 
 class RemoteController(ControllerInterface.ControllerInterface):
@@ -72,6 +73,8 @@ class RemoteController(ControllerInterface.ControllerInterface):
             ),
         )
 
+        self.commandPusher = CommandPusher.CommandPusher()
+
         self.frontWheels.ready()
         self.backWheels.ready()
         self.camera.ready()
@@ -87,12 +90,15 @@ class RemoteController(ControllerInterface.ControllerInterface):
             'currentSpeed': self.speedService.getCurrentSpeed()
         }
 
-    def forward(self, speed) -> None:
+    def pushCommand(self, payload: object) -> None:
+        self.commandPusher.pushCommand(payload)
+
+    def forward(self, speed: int) -> None:
         self.speedService.setSpeed(speed)
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.forward()
 
-    def backward(self, speed) -> None:
+    def backward(self, speed: int) -> None:
         self.speedService.setSpeed(speed)
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.backward()
