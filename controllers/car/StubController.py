@@ -1,5 +1,6 @@
-from . import AngleService, SpeedService
-from .. import ControllerInterface
+import controllers.car.AngleService as AngleService
+import controllers.car.SpeedService as SpeedService
+import controllers.ControllerInterface as ControllerInterface
 
 
 class StubController(ControllerInterface.ControllerInterface):

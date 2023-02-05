@@ -1,5 +1,6 @@
 import logging
-from . import Servo, AngleService
+import controllers.car.Servo as Servo
+import controllers.car.AngleService as AngleService
 
 
 class FrontWheels(object):

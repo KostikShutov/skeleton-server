@@ -1,5 +1,5 @@
 import logging
-from . import PCA9685
+import controllers.car.PCA9685 as PCA9685
 
 
 class Servo(object):

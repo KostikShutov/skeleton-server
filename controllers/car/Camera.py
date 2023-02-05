@@ -1,5 +1,5 @@
 import logging
-from . import Servo
+import controllers.car.Servo as Servo
 
 
 class Camera(object):

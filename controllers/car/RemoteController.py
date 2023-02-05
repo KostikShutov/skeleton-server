@@ -1,6 +1,13 @@
 import logging
-from . import AngleService, BackWheels, SpeedService, Camera, FrontWheels, PCA9685, Servo, TB6612
-from .. import ControllerInterface
+import controllers.car.AngleService as AngleService
+import controllers.car.BackWheels as BackWheels
+import controllers.car.SpeedService as SpeedService
+import controllers.car.Camera as Camera
+import controllers.car.FrontWheels as FrontWheels
+import controllers.car.PCA9685 as PCA9685
+import controllers.car.Servo as Servo
+import controllers.car.TB6612 as TB6612
+import controllers.ControllerInterface as ControllerInterface
 
 
 class RemoteController(ControllerInterface.ControllerInterface):

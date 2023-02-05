@@ -1,5 +1,6 @@
 import logging
-from . import TB6612, SpeedService
+import controllers.car.TB6612 as TB6612
+import controllers.car.SpeedService as SpeedService
 
 
 class BackWheels(object):
