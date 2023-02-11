@@ -26,6 +26,11 @@ python i2c.py
 python server.py
 ```
 
+Запустить commander (consumer):
+```bash
+python commander.py
+```
+
 Запустить камеру:
 ```bash
 cd mjpg-streamer
