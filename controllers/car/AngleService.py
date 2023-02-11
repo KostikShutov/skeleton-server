@@ -1,12 +1,19 @@
+import redis
+import utils.Config as Config
+
+
 class AngleService:
     def __init__(self, minAngle: int = 45, maxAngle: int = 135) -> None:
-        self.currentAngle = None
-        self.minAngle = minAngle
-        self.maxAngle = maxAngle
+        config: dict = Config.Config().getConfig()
+        host: str = config['REDIS_HOST']
+        self.redis: redis.Redis = redis.Redis(host=host)
+
+        self.minAngle: int = minAngle
+        self.maxAngle: int = maxAngle
         self.setAngle(90)
 
     def getCurrentAngle(self) -> int:
-        return self.currentAngle
+        return int(self.redis.get('currentAngle').decode("utf-8"))
 
     def getMinAngle(self) -> int:
         return self.minAngle
@@ -16,8 +23,8 @@ class AngleService:
 
     def setAngle(self, angle: int) -> None:
         if angle < self.minAngle:
-            self.currentAngle = self.minAngle
+            self.redis.set('currentAngle', self.minAngle)
         elif angle > self.maxAngle:
-            self.currentAngle = self.maxAngle
+            self.redis.set('currentAngle', self.maxAngle)
         else:
-            self.currentAngle = angle
+            self.redis.set('currentAngle', angle)
