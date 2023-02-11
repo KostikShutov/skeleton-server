@@ -21,7 +21,10 @@ class Commander:
         self.queue: str = config['RABBITMQ_QUEUE']
 
         self.channel = pika.BlockingConnection(
-            pika.ConnectionParameters(host=host)
+            pika.ConnectionParameters(
+                host=host,
+                heartbeat=0,
+            )
         ).channel()
 
         self.channel.queue_declare(queue=self.queue)
