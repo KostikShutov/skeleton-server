@@ -93,12 +93,12 @@ class RemoteController(ControllerInterface.ControllerInterface):
     def pushCommand(self, payload: object) -> None:
         self.commandPusher.pushCommand(payload)
 
-    def forward(self, speed: int) -> None:
+    def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
         self.speedService.setSpeed(speed)
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.forward()
 
-    def backward(self, speed: int) -> None:
+    def backward(self, speed: int, distance: int = None, duration: int = None) -> None:
         self.speedService.setSpeed(speed)
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.backward()

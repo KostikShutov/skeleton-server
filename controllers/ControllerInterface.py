@@ -5,10 +5,10 @@ class ControllerInterface:
     def pushCommand(self, payload: object) -> None:
         pass
 
-    def forward(self, speed: int) -> None:
+    def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
         pass
 
-    def backward(self, speed: int) -> None:
+    def backward(self, speed: int, distance: int = None, duration: int = None) -> None:
         pass
 
     def stop(self) -> None:
