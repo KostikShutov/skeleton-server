@@ -1,3 +1,4 @@
+import logging
 import controllers.car.AngleService as AngleService
 import controllers.car.SpeedService as SpeedService
 import controllers.ControllerInterface as ControllerInterface
@@ -24,51 +25,51 @@ class StubController(ControllerInterface.ControllerInterface):
         self.commandPusher.pushCommand(payload)
 
     def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
-        print('Forward (speed: %s, distance: %s, duration: %s)' % (speed, distance, duration))
+        logging.info('Forward (speed: %s, distance: %s, duration: %s)' % (speed, distance, duration))
 
     def backward(self, speed: int, distance: int = None, duration: int = None) -> None:
-        print('Backward (speed: %s, distance: %s, duration: %s)' % (speed, distance, duration))
+        logging.info('Backward (speed: %s, distance: %s, duration: %s)' % (speed, distance, duration))
 
     def stop(self) -> None:
-        print('Stop')
+        logging.info('Stop')
 
     def left(self) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
         self.angleService.setAngle(oldAngle - 45)
         newAngle: int = self.angleService.getCurrentAngle()
-        print('Left (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        logging.info('Left (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def straight(self) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
         self.angleService.setAngle(90)
         newAngle: int = self.angleService.getCurrentAngle()
-        print('Straight (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        logging.info('Straight (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def right(self) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
         self.angleService.setAngle(oldAngle + 45)
         newAngle: int = self.angleService.getCurrentAngle()
-        print('Right (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        logging.info('Right (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def turn(self, angle) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
         self.angleService.setAngle(angle)
         newAngle: int = self.angleService.getCurrentAngle()
-        print('Turn (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
+        logging.info('Turn (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def angle(self) -> int:
         angle: int = self.angleService.getCurrentAngle()
-        print('Angle (currentAngle: %s)' % angle)
+        logging.info('Angle (currentAngle: %s)' % angle)
         return angle
 
     def cameraLeft(self) -> None:
-        print('Camera left')
+        logging.info('Camera left')
 
     def cameraRight(self) -> None:
-        print('Camera right')
+        logging.info('Camera right')
 
     def cameraUp(self) -> None:
-        print('Camera up')
+        logging.info('Camera up')
 
     def cameraDown(self) -> None:
-        print('Camera down')
+        logging.info('Camera down')
