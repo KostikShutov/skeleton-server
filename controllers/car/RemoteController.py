@@ -81,6 +81,9 @@ class RemoteController(ControllerInterface.ControllerInterface):
         self.pwm.setup()
 
     def init(self):
+        self.angleService.setAngle(90)
+        self.speedService.setSpeed(60)
+
         return {
             'minAngle': self.angleService.getMinAngle(),
             'maxAngle': self.angleService.getMaxAngle(),

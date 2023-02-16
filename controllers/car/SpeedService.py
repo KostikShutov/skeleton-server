@@ -3,7 +3,6 @@ class SpeedService:
         self.currentSpeed = None
         self.minSpeed = minSpeed
         self.maxSpeed = maxSpeed
-        self.setSpeed(60)
 
     def getCurrentSpeed(self) -> int:
         return self.currentSpeed

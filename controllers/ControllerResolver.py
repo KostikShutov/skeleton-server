@@ -1,10 +1,9 @@
-import utils.Config as Config
 import controllers.ControllerInterface as ControllerInterface
+from utils.Config import config
 
 
 class ControllerResolver:
     def __init__(self):
-        config: dict = Config.Config().getConfig()
         self.controller = config['CONTROLLER']
 
     def resolve(self) -> ControllerInterface:

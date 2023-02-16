@@ -1,7 +1,6 @@
-import utils.Config as Config
+from utils.Config import config
 from celery import Celery
 
-config: dict = Config.Config().getConfig()
 host: str = config['RABBITMQ_HOST']
 
 app = Celery('commands',

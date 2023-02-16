@@ -34,6 +34,7 @@ def health(sid: str) -> None:
     print('Health (%s)' % sid)
 
 
+# ============== Movement =============
 @sio.event
 def init(sid: str) -> str:
     return json.dumps(controller.init())
@@ -42,42 +43,6 @@ def init(sid: str) -> str:
 @sio.event
 def pushCommand(sid: str, data: object) -> None:
     return controller.pushCommand(data)
-
-
-# ============== Movement =============
-@sio.event
-def forward(sid: str, data: object) -> None:
-    controller.forward(int(data['speed']))
-
-
-@sio.event
-def backward(sid: str, data: object) -> None:
-    controller.backward(int(data['speed']))
-
-
-@sio.event
-def stop(sid: str) -> None:
-    controller.stop()
-
-
-@sio.event
-def left(sid: str) -> None:
-    controller.left()
-
-
-@sio.event
-def straight(sid: str) -> None:
-    controller.straight()
-
-
-@sio.event
-def right(sid: str) -> None:
-    controller.right()
-
-
-@sio.event
-def turn(sid: str, data) -> None:
-    controller.turn(int(data['angle']))
 
 
 @sio.event
