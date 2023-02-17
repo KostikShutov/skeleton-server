@@ -1,22 +1,35 @@
-import commands.BackwardCommand as BackwardCommand
-import commands.ForwardCommand as ForwardCommand
-import commands.LeftCommand as LeftCommand
-import commands.RightCommand as RightCommand
-import commands.StopCommand as StopCommand
-import commands.StraightCommand as StraightCommand
-import commands.TurnCommand as TurnCommand
+from commands.BackwardCommand import BackwardCommand
+from commands.ForwardCommand import ForwardCommand
+from commands.LeftCommand import LeftCommand
+from commands.RightCommand import RightCommand
+from commands.StopCommand import StopCommand
+from commands.StraightCommand import StraightCommand
+from commands.TurnCommand import TurnCommand
+from commands.CameraLeftCommand import CameraLeftCommand
+from commands.CameraRightCommand import CameraRightCommand
+from commands.CameraUpCommand import CameraUpCommand
+from commands.CameraDownCommand import CameraDownCommand
+from commands.CommandPusher import CommandPusher
+from controllers.ControllerResolver import ControllerResolver
 
 
 class CommandExecutor:
-    def __init__(self):
+    def __init__(self) -> None:
+        controller = ControllerResolver().resolve()
+        commandPusher = CommandPusher()
+
         self.commands = [
-            BackwardCommand.BackwardCommand(),
-            ForwardCommand.ForwardCommand(),
-            LeftCommand.LeftCommand(),
-            RightCommand.RightCommand(),
-            StopCommand.StopCommand(),
-            StraightCommand.StraightCommand(),
-            TurnCommand.TurnCommand(),
+            BackwardCommand(controller, commandPusher),
+            ForwardCommand(controller, commandPusher),
+            LeftCommand(controller),
+            RightCommand(controller),
+            StopCommand(controller),
+            StraightCommand(controller),
+            TurnCommand(controller),
+            CameraLeftCommand(controller),
+            CameraRightCommand(controller),
+            CameraUpCommand(controller),
+            CameraDownCommand(controller),
         ]
 
     def execute(self, payload: dict) -> None:

@@ -3,15 +3,15 @@
 import eventlet
 import socketio
 import json
-import controllers.ControllerInterface as ControllerInterface
-import controllers.ControllerResolver as ControllerResolver
+from controllers.ControllerResolver import ControllerResolver
+from commands.CommandPusher import CommandPusher
 
-controller: ControllerInterface = ControllerResolver.ControllerResolver().resolve()
-sio: socketio.Server = socketio.Server(cors_allowed_origins='*')
-app: socketio.WSGIApp = socketio.WSGIApp(sio)
+controller = ControllerResolver().resolve()
+commandPusher = CommandPusher()
+sio = socketio.Server(cors_allowed_origins='*')
+app = socketio.WSGIApp(sio)
 
 
-# ============== General =============
 @sio.event
 def connect(sid: str, environ: str, auth: dict) -> None:
     token: str = auth['token']
@@ -25,7 +25,6 @@ def connect(sid: str, environ: str, auth: dict) -> None:
 
 @sio.event
 def disconnect(sid: str) -> None:
-    controller.stop()
     print('Disconnect (%s)' % sid)
 
 
@@ -34,41 +33,14 @@ def health(sid: str) -> None:
     print('Health (%s)' % sid)
 
 
-# ============== Movement =============
 @sio.event
-def init(sid: str) -> str:
-    return json.dumps(controller.init())
+def state(sid: str) -> str:
+    return json.dumps(controller.state())
 
 
 @sio.event
 def pushCommand(sid: str, data: object) -> None:
-    return controller.pushCommand(data)
-
-
-@sio.event
-def angle(sid: str) -> None:
-    return controller.angle()
-
-
-# ================ Camera =================
-@sio.event
-def cameraLeft(sid: str) -> None:
-    controller.cameraLeft()
-
-
-@sio.event
-def cameraRight(sid: str) -> None:
-    controller.cameraRight()
-
-
-@sio.event
-def cameraUp(sid: str) -> None:
-    controller.cameraUp()
-
-
-@sio.event
-def cameraDown(sid: str) -> None:
-    controller.cameraDown()
+    commandPusher.pushCommand(data)
 
 
 if __name__ == '__main__':

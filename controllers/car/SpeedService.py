@@ -1,11 +1,14 @@
+from utils.Redis import redis
+
+
 class SpeedService:
     def __init__(self, minSpeed: int = 1, maxSpeed: int = 100) -> None:
-        self.currentSpeed = None
         self.minSpeed = minSpeed
         self.maxSpeed = maxSpeed
+        self.setSpeed(60)
 
     def getCurrentSpeed(self) -> int:
-        return self.currentSpeed
+        return int(redis.get('currentSpeed').decode('utf-8'))
 
     def getMinSpeed(self) -> int:
         return self.minSpeed
@@ -15,8 +18,8 @@ class SpeedService:
 
     def setSpeed(self, speed: int) -> None:
         if speed < self.minSpeed:
-            self.currentSpeed = self.minSpeed
+            redis.set('currentSpeed', self.minSpeed)
         elif speed > self.maxSpeed:
-            self.currentSpeed = self.maxSpeed
+            redis.set('currentSpeed', self.maxSpeed)
         else:
-            self.currentSpeed = speed
+            redis.set('currentSpeed', speed)

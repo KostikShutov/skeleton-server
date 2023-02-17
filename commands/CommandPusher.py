@@ -4,9 +4,6 @@ from utils.Redis import redis
 
 
 class CommandPusher:
-    def __init__(self):
-        self.redis = redis
-
     def pushCommand(self, payload: object) -> None:
         from commands.tasks import commandExecute
         body: str = json.dumps(payload)
@@ -20,7 +17,7 @@ class CommandPusher:
     def pushDelayedStop(self, duration: int) -> None:
         currentVerticalCommandId: str = str(uuid.uuid4())
 
-        self.redis.set('currentVerticalCommandId', currentVerticalCommandId)
+        redis.set('currentVerticalCommandId', currentVerticalCommandId)
 
         self.pushDelayedCommand(
             {

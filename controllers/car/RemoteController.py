@@ -1,17 +1,16 @@
 import logging
-import controllers.car.AngleService as AngleService
-import controllers.car.BackWheels as BackWheels
-import controllers.car.SpeedService as SpeedService
-import controllers.car.Camera as Camera
-import controllers.car.FrontWheels as FrontWheels
-import controllers.car.PCA9685 as PCA9685
-import controllers.car.Servo as Servo
-import controllers.car.TB6612 as TB6612
-import controllers.ControllerInterface as ControllerInterface
-import commands.CommandPusher as CommandPusher
+from controllers.car.AngleService import AngleService
+from controllers.car.BackWheels import BackWheels
+from controllers.car.SpeedService import SpeedService
+from controllers.car.Camera import Camera
+from controllers.car.FrontWheels import FrontWheels
+from controllers.car.PCA9685 import PWM
+from controllers.car.Servo import Servo
+from controllers.car.TB6612 import Motor
+from controllers.ControllerInterface import ControllerInterface
 
 
-class RemoteController(ControllerInterface.ControllerInterface):
+class RemoteController(ControllerInterface):
     FRONT_OFFSET: int = -21
     CAMERA_PAN_OFFSET: int = -23
     CAMERA_TILT_OFFSET: int = 18
@@ -31,28 +30,35 @@ class RemoteController(ControllerInterface.ControllerInterface):
         logging.root.setLevel(logging.INFO)
         logging.basicConfig(format='%(asctime)s %(message)s')
 
-        self.angleService = AngleService.AngleService()
-        self.speedService = SpeedService.SpeedService()
-        self.pwm = PCA9685.PWM()
+        self.angleService = AngleService()
+        self.speedService = SpeedService()
 
-        self.frontWheels = FrontWheels.FrontWheels(
+        self.pwm = None
+        self.frontWheels = None
+        self.backWheels = None
+        self.camera = None
+
+    def init(self) -> None:
+        self.pwm = PWM()
+
+        self.frontWheels = FrontWheels(
             angleService=self.angleService,
-            servo=Servo.Servo(
+            servo=Servo(
                 pwm=self.pwm,
                 pwmChannel=self.FRONT_PWM_CHANNEL,
                 offset=self.FRONT_OFFSET,
             ),
         )
 
-        self.backWheels = BackWheels.BackWheels(
+        self.backWheels = BackWheels(
             speedService=self.speedService,
-            leftMotor=TB6612.Motor(
+            leftMotor=Motor(
                 pwm=self.pwm,
                 pwmChannel=self.BACK_LEFT_PWM_CHANNEL,
                 directionChannel=self.BACK_LEFT_DIRECTION_CHANNEL,
                 offset=bool(self.BACK_LEFT_OFFSET),
             ),
-            rightMotor=TB6612.Motor(
+            rightMotor=Motor(
                 pwm=self.pwm,
                 pwmChannel=self.BACK_RIGHT_PWM_CHANNEL,
                 directionChannel=self.BACK_RIGHT_DIRECTION_CHANNEL,
@@ -60,30 +66,25 @@ class RemoteController(ControllerInterface.ControllerInterface):
             ),
         )
 
-        self.camera = Camera.Camera(
-            panServo=Servo.Servo(
+        self.camera = Camera(
+            panServo=Servo(
                 pwm=self.pwm,
                 pwmChannel=self.CAMERA_PAN_PWM_CHANNEL,
                 offset=self.CAMERA_PAN_OFFSET,
             ),
-            tiltServo=Servo.Servo(
+            tiltServo=Servo(
                 pwm=self.pwm,
                 pwmChannel=self.CAMERA_TILT_PWM_CHANNEL,
                 offset=self.CAMERA_TILT_OFFSET,
             ),
         )
 
-        self.commandPusher = CommandPusher.CommandPusher()
-
         self.frontWheels.ready()
         self.backWheels.ready()
         self.camera.ready()
         self.pwm.setup()
 
-    def init(self):
-        self.angleService.setAngle(90)
-        self.speedService.setSpeed(60)
-
+    def state(self) -> dict:
         return {
             'minAngle': self.angleService.getMinAngle(),
             'maxAngle': self.angleService.getMaxAngle(),
@@ -92,9 +93,6 @@ class RemoteController(ControllerInterface.ControllerInterface):
             'maxSpeed': self.speedService.getMaxSpeed(),
             'currentSpeed': self.speedService.getCurrentSpeed()
         }
-
-    def pushCommand(self, payload: object) -> None:
-        self.commandPusher.pushCommand(payload)
 
     def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
         self.speedService.setSpeed(speed)
@@ -118,11 +116,8 @@ class RemoteController(ControllerInterface.ControllerInterface):
     def right(self) -> None:
         self.frontWheels.turnRight()
 
-    def turn(self, angle) -> None:
+    def turn(self, angle: int) -> None:
         self.frontWheels.turn(angle)
-
-    def angle(self) -> int:
-        return self.angleService.getCurrentAngle()
 
     def cameraLeft(self) -> None:
         self.camera.turnLeft(40)

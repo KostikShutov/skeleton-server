@@ -1,12 +1,11 @@
-import commands.CommandInterface as CommandInterface
-import controllers.ControllerResolver as ControllerResolver
+from commands.CommandInterface import CommandInterface
+from controllers.ControllerInterface import ControllerInterface
 from utils.Redis import redis
 
 
-class StopCommand(CommandInterface.CommandInterface):
-    def __init__(self):
-        self.redis = redis
-        self.controller = ControllerResolver.ControllerResolver()
+class StopCommand(CommandInterface):
+    def __init__(self, controller: ControllerInterface) -> None:
+        self.controller = controller
 
     def execute(self, payload: object) -> None:
         verticalCommandId: str = payload['verticalCommandId'] if 'verticalCommandId' in payload else None
@@ -14,15 +13,15 @@ class StopCommand(CommandInterface.CommandInterface):
         if self.needSkip(verticalCommandId):
             return
 
-        self.redis.delete('currentVerticalCommandId')
-        self.controller.resolve().stop()
+        redis.delete('currentVerticalCommandId')
+        self.controller.stop()
 
     def canExecute(self, payload: object) -> bool:
         return payload['name'] == 'STOP'
 
     def needSkip(self, verticalCommandId: str) -> bool:
         if verticalCommandId is not None:
-            currentVerticalCommandId = self.redis.get('currentVerticalCommandId')
+            currentVerticalCommandId = redis.get('currentVerticalCommandId')
 
             if currentVerticalCommandId is None:
                 return True

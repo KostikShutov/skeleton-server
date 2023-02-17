@@ -1,11 +1,14 @@
-import commands.CommandInterface as CommandInterface
-import commands.CommandPusher as CommandPusher
-import controllers.ControllerResolver as ControllerResolver
+from commands.CommandPusher import CommandPusher
+from commands.CommandInterface import CommandInterface
+from controllers.ControllerInterface import ControllerInterface
 
 
-class BackwardCommand(CommandInterface.CommandInterface):
-    def __init__(self):
-        self.controller = ControllerResolver.ControllerResolver()
+class BackwardCommand(CommandInterface):
+    def __init__(self,
+                 controller: ControllerInterface,
+                 commandPusher: CommandPusher) -> None:
+        self.controller = controller
+        self.commandPusher = commandPusher
 
     def execute(self, payload: dict) -> None:
         speed: int = int(payload['speed'])
@@ -13,9 +16,9 @@ class BackwardCommand(CommandInterface.CommandInterface):
         duration: int = payload['duration'] if 'duration' in payload else None
 
         if duration is not None:
-            CommandPusher.CommandPusher().pushDelayedStop(duration)
+            self.commandPusher.pushDelayedStop(duration)
 
-        self.controller.resolve().backward(speed, distance, duration)
+        self.controller.backward(speed, distance, duration)
 
     def canExecute(self, payload: object) -> bool:
         return payload['name'] == 'BACKWARD'

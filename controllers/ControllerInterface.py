@@ -1,8 +1,8 @@
 class ControllerInterface:
-    def init(self):
+    def init(self) -> None:
         pass
 
-    def pushCommand(self, payload: object) -> None:
+    def state(self) -> dict:
         pass
 
     def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
@@ -23,10 +23,7 @@ class ControllerInterface:
     def right(self) -> None:
         pass
 
-    def turn(self, angle) -> None:
-        pass
-
-    def angle(self) -> int:
+    def turn(self, angle: int) -> None:
         pass
 
     def cameraLeft(self) -> None:
