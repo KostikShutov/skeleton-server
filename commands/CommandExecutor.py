@@ -16,6 +16,7 @@ from controllers.ControllerResolver import ControllerResolver
 class CommandExecutor:
     def __init__(self) -> None:
         controller = ControllerResolver().resolve()
+        controller.init()
         commandPusher = CommandPusher()
 
         self.commands = [
