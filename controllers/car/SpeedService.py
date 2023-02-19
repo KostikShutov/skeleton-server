@@ -5,6 +5,8 @@ class SpeedService:
     def __init__(self, minSpeed: int = 1, maxSpeed: int = 100) -> None:
         self.minSpeed = minSpeed
         self.maxSpeed = maxSpeed
+
+    def init(self) -> None:
         self.setSpeed(60)
 
     def getCurrentSpeed(self) -> int:

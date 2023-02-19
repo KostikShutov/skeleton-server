@@ -5,6 +5,8 @@ class AngleService:
     def __init__(self, minAngle: int = 45, maxAngle: int = 135) -> None:
         self.minAngle: int = minAngle
         self.maxAngle: int = maxAngle
+
+    def init(self) -> None:
         self.setAngle(90)
 
     def getCurrentAngle(self) -> int:

@@ -39,6 +39,9 @@ class RemoteController(ControllerInterface):
         self.camera = None
 
     def init(self) -> None:
+        self.angleService.init()
+        self.speedService.init()
+
         self.pwm = PWM()
 
         self.frontWheels = FrontWheels(
