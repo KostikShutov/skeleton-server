@@ -10,7 +10,8 @@ class StubController(ControllerInterface):
         self.speedService = SpeedService()
 
     def init(self) -> None:
-        pass
+        self.angleService.init()
+        self.speedService.init()
 
     def state(self) -> dict:
         return {
