@@ -18,9 +18,9 @@ d-restart:
 d-python:
 	docker-compose exec python-picar bash
 
-#############
-# Commander #
-#############
+##########
+# Server #
+##########
 
 .PHONY: s-server
 s-server:
