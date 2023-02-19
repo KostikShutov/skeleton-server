@@ -46,7 +46,8 @@ def pushCommand(sid: str, data: object) -> str:
 
 @sio.event
 def statusCommand(sid: str, commandId: str) -> bool:
-    return redis.get('command_' + commandId).decode('utf-8')
+    status = redis.get('command_' + commandId)
+    return None if status is None else status.decode('utf-8')
 
 
 if __name__ == '__main__':
