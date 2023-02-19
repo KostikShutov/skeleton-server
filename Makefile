@@ -22,6 +22,10 @@ d-python:
 # Commander #
 #############
 
+.PHONY: s-server
+s-server:
+	docker-compose run --rm -p 1002:5000 -w /code python-picar python server.py
+
 .PHONY: s-commander
 s-commander:
 	docker-compose run --rm -w /code python-picar celery -A commands worker -l INFO
