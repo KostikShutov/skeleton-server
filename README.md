@@ -23,7 +23,7 @@ python i2c.py
 
 Запустить backend:
 ```bash
-python server.py
+make s-server
 ```
 
 Запустить commander (consumer):
