@@ -14,12 +14,15 @@ class ForwardCommand(CommandInterface):
 
     def execute(self, commandId: uuid.UUID, payload: dict) -> bool:
         speed: int = int(payload['speed'])
-        distance: int = payload['distance'] if 'distance' in payload else None
-        duration: int = payload['duration'] if 'duration' in payload else None
+        distance: int = int(payload['distance']) if 'distance' in payload else None
+        duration: int = int(payload['duration']) if 'duration' in payload else None
+
+        if distance is not None and duration is None:
+            duration = int(distance / speed)
 
         redis.set('currentVerticalCommandId', str(commandId))
 
-        if duration is not None:
+        if duration is not None and duration > 0:
             self.commandPusher.pushDelayedStop(commandId, duration)
 
         self.controller.forward(speed, distance, duration)
