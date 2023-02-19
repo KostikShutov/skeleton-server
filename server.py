@@ -5,6 +5,7 @@ import socketio
 import json
 from controllers.ControllerResolver import ControllerResolver
 from commands.CommandPusher import CommandPusher
+from utils.Redis import redis
 
 controller = ControllerResolver().resolve()
 commandPusher = CommandPusher()
@@ -39,8 +40,13 @@ def state(sid: str) -> str:
 
 
 @sio.event
-def pushCommand(sid: str, data: object) -> None:
-    commandPusher.pushCommand(data)
+def pushCommand(sid: str, data: object) -> str:
+    return str(commandPusher.pushCommand(data))
+
+
+@sio.event
+def statusCommand(sid: str, commandId: str) -> bool:
+    return redis.get('command_' + commandId).decode('utf-8')
 
 
 if __name__ == '__main__':
