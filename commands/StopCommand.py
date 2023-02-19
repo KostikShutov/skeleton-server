@@ -15,6 +15,7 @@ class StopCommand(CommandInterface):
             return True
 
         self.controller.stop()
+        redis.delete('currentVerticalCommandId')
 
         if relatedCommandId is not None:
             redis.set(
@@ -32,6 +33,11 @@ class StopCommand(CommandInterface):
         if relatedCommandId is None:
             return False
 
-        currentVerticalCommandId: str = str(redis.get('currentVerticalCommandId').decode('utf-8'))
+        currentVerticalCommandId = redis.get('currentVerticalCommandId')
+
+        if currentVerticalCommandId is None:
+            return True
+
+        currentVerticalCommandId: str = str(currentVerticalCommandId.decode('utf-8'))
 
         return relatedCommandId != currentVerticalCommandId
