@@ -10,9 +10,3 @@ commandExecutor = CommandExecutor()
 def commandExecute(commandId: uuid.UUID, body: str) -> None:
     payload: dict = json.loads(body)
     commandExecutor.execute(commandId, payload)
-
-
-@app.task
-def commandDelayedExecute(commandId: uuid.UUID, body: str) -> None:
-    payload: dict = json.loads(body)
-    commandExecutor.execute(commandId, payload)

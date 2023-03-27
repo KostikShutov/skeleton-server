@@ -23,11 +23,11 @@ class StubController(ControllerInterface):
             'currentSpeed': self.speedService.getCurrentSpeed()
         }
 
-    def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
-        logging.info('Forward (speed: %s, distance: %s, duration: %s)' % (speed, distance, duration))
+    def forward(self, speed: int) -> None:
+        logging.info('Forward (speed: %s)' % speed)
 
-    def backward(self, speed: int, distance: int = None, duration: int = None) -> None:
-        logging.info('Backward (speed: %s, distance: %s, duration: %s)' % (speed, distance, duration))
+    def backward(self, speed: int) -> None:
+        logging.info('Backward (speed: %s)' % speed)
 
     def stop(self) -> None:
         logging.info('Stop')

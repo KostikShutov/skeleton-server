@@ -97,12 +97,12 @@ class RemoteController(ControllerInterface):
             'currentSpeed': self.speedService.getCurrentSpeed()
         }
 
-    def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
+    def forward(self, speed: int) -> None:
         self.speedService.setSpeed(speed)
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.forward()
 
-    def backward(self, speed: int, distance: int = None, duration: int = None) -> None:
+    def backward(self, speed: int) -> None:
         self.speedService.setSpeed(speed)
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.backward()

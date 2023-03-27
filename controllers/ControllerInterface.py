@@ -5,10 +5,10 @@ class ControllerInterface:
     def state(self) -> dict:
         pass
 
-    def forward(self, speed: int, distance: int = None, duration: int = None) -> None:
+    def forward(self, speed: int) -> None:
         pass
 
-    def backward(self, speed: int, distance: int = None, duration: int = None) -> None:
+    def backward(self, speed: int) -> None:
         pass
 
     def stop(self) -> None:
