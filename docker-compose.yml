@@ -16,6 +16,9 @@ services:
     container_name: rabbitmq-picar-container
     ports:
       - "1003:15672"
+      - "1004:5672"
   redis-picar:
     image: redis:latest
     container_name: redis-picar-container
+    ports:
+      - "1005:6379"
