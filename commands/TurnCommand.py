@@ -1,4 +1,3 @@
-import uuid
 from commands.CommandInterface import CommandInterface
 from controllers.ControllerInterface import ControllerInterface
 
@@ -7,7 +6,7 @@ class TurnCommand(CommandInterface):
     def __init__(self, controller: ControllerInterface) -> None:
         self.controller = controller
 
-    def execute(self, commandId: uuid.UUID, payload: dict) -> None:
+    def execute(self, payload: dict) -> None:
         angle: int = int(payload['angle']) if 'angle' in payload else None
 
         if angle is not None:

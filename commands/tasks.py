@@ -1,4 +1,3 @@
-import uuid
 import json
 from commands.CommandExecutor import CommandExecutor
 from commands.celery import app
@@ -7,6 +6,6 @@ commandExecutor = CommandExecutor()
 
 
 @app.task
-def commandExecute(commandId: uuid.UUID, body: str) -> None:
+def commandTask(body: str) -> None:
     payload: dict = json.loads(body)
-    commandExecutor.execute(commandId, payload)
+    commandExecutor.execute(payload)

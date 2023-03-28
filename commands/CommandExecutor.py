@@ -1,4 +1,3 @@
-import uuid
 from commands.BackwardCommand import BackwardCommand
 from commands.ForwardCommand import ForwardCommand
 from commands.LeftCommand import LeftCommand
@@ -11,7 +10,6 @@ from commands.CameraRightCommand import CameraRightCommand
 from commands.CameraUpCommand import CameraUpCommand
 from commands.CameraDownCommand import CameraDownCommand
 from controllers.ControllerResolver import ControllerResolver
-from utils.Redis import redis
 
 
 class CommandExecutor:
@@ -33,8 +31,7 @@ class CommandExecutor:
             CameraDownCommand(controller),
         ]
 
-    def execute(self, commandId: uuid.UUID, payload: dict) -> None:
+    def execute(self, payload: dict) -> None:
         for command in self.commands:
             if command.canExecute(payload):
-                command.execute(commandId, payload)
-                redis.set(name='command_' + str(commandId), value=1, ex=300)
+                command.execute(payload)

@@ -4,11 +4,10 @@ import eventlet
 import socketio
 import json
 from controllers.ControllerResolver import ControllerResolver
-from commands.CommandPusher import CommandPusher
-from utils.Redis import redis
+from commands.CommandService import CommandService
 
 controller = ControllerResolver().resolve()
-commandPusher = CommandPusher()
+commandService = CommandService()
 sio = socketio.Server(cors_allowed_origins='*')
 app = socketio.WSGIApp(sio)
 
@@ -41,13 +40,22 @@ def state(sid: str) -> str:
 
 @sio.event
 def pushCommand(sid: str, data: object) -> str:
-    return str(commandPusher.pushCommand(data))
+    return str(commandService.pushCommand(data))
 
 
 @sio.event
-def statusCommand(sid: str, commandId: str) -> bool:
-    status = redis.get('command_' + commandId)
-    return None if status is None else status.decode('utf-8')
+def revokeCommand(sid: str, commandId: str) -> None:
+    commandService.revokeCommand(commandId)
+
+
+@sio.event
+def statusCommand(sid: str, commandId: str) -> str:
+    return commandService.getCommandStatus(commandId)
+
+
+@sio.event
+def purgeCommands(sid: str) -> None:
+    commandService.purgeCommands()
 
 
 if __name__ == '__main__':

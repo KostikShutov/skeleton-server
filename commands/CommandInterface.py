@@ -1,8 +1,5 @@
-import uuid
-
-
 class CommandInterface:
-    def execute(self, commandId: uuid.UUID, payload: dict) -> None:
+    def execute(self, payload: dict) -> None:
         pass
 
     def canExecute(self, payload: dict) -> bool:
