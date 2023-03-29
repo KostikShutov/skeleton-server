@@ -7,10 +7,9 @@ class TurnCommand(CommandInterface):
         self.controller = controller
 
     def execute(self, payload: dict) -> None:
-        angle: int = int(payload['angle']) if 'angle' in payload else None
+        angle: int = int(payload['angle'])
 
-        if angle is not None:
-            self.controller.turn(angle)
+        self.controller.turn(angle)
 
     def canExecute(self, payload: dict) -> bool:
         return payload['name'] == 'TURN'

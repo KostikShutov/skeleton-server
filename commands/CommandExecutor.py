@@ -1,3 +1,4 @@
+import logging
 from commands.BackwardCommand import BackwardCommand
 from commands.ForwardCommand import ForwardCommand
 from commands.LeftCommand import LeftCommand
@@ -35,3 +36,6 @@ class CommandExecutor:
         for command in self.commands:
             if command.canExecute(payload):
                 command.execute(payload)
+                return
+
+        logging.warning('[Commander] Cannot execute command (%s)' % payload)

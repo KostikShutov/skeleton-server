@@ -24,7 +24,7 @@ d-python:
 
 .PHONY: s-server
 s-server:
-	docker-compose run --rm -p 1002:5000 -w /code python-picar python server.py
+	docker-compose run --rm -p 2001:5000 -w /code python-picar python server.py
 
 .PHONY: s-commander
 s-commander:

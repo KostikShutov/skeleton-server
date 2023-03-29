@@ -15,10 +15,10 @@ services:
     image: rabbitmq:management
     container_name: rabbitmq-picar-container
     ports:
-      - "1003:15672"
-      - "1004:5672"
+      - "2002:15672"
+      - "2003:5672"
   redis-picar:
     image: redis:latest
     container_name: redis-picar-container
     ports:
-      - "1005:6379"
+      - "2004:6379"
