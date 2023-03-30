@@ -3,6 +3,13 @@ from commands.celery import app
 
 
 class CommandService:
+    def pushCommands(self, payloads: list[object]) -> list[str]:
+        tasks: list[str] = []
+        for payload in payloads:
+            task = self.pushCommand(payload)
+            tasks.append(task)
+        return tasks
+
     def pushCommand(self, payload: object) -> str:
         from commands.tasks import commandTask
         body: str = json.dumps(payload)
@@ -21,7 +28,7 @@ class CommandService:
         self.__revokeJobs(i.active())  # Remove active tasks
         self.__revokeJobs(i.reserved())  # Remove reserved tasks
 
-    def __revokeJobs(self, jobs) -> None:
+    def __revokeJobs(self, jobs: list) -> None:
         for hostname in jobs:
             tasks = jobs[hostname]
             for task in tasks:

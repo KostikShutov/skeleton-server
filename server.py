@@ -39,8 +39,13 @@ def state(sid: str) -> str:
 
 
 @sio.event
-def pushCommand(sid: str, data: object) -> str:
-    return str(commandService.pushCommand(data))
+def pushCommands(sid: str, payloads: list) -> str:
+    return json.dumps(commandService.pushCommands(payloads))
+
+
+@sio.event
+def pushCommand(sid: str, payload: object) -> str:
+    return str(commandService.pushCommand(payload))
 
 
 @sio.event
