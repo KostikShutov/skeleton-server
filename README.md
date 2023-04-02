@@ -63,6 +63,6 @@ make s-commander
 Запустить камеру:
 
 ```bash
-cd mjpg-streamer
+cd mjpg-streamer/mjpg-streamer-experimental
 bash start.sh
 ```
