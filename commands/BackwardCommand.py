@@ -9,11 +9,7 @@ class BackwardCommand(CommandInterface):
 
     def execute(self, payload: dict) -> None:
         speed: int = int(payload['speed'])
-        distance: float = float(payload['distance']) if 'distance' in payload else 0
         duration: float = float(payload['duration']) if 'duration' in payload else 0
-
-        if distance > 0 >= duration:
-            duration: float = float(distance / speed)
 
         self.controller.backward(speed)
 
