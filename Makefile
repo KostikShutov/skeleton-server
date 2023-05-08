@@ -28,4 +28,4 @@ s-server:
 
 .PHONY: s-commander
 s-commander:
-	docker-compose run --rm -w /code python-picar celery -A commands worker --concurrency=1 -l INFO
+	docker-compose run --rm -w /code python-picar python -m celery -A commands worker --concurrency=1 -l INFO
