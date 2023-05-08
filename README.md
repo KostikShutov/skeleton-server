@@ -32,20 +32,6 @@ make d-restart
 make d-python
 ```
 
-## Raspberry
-
-Установить зависимости на операционную систему:
-
-```bash
-bash install-dependencies.sh
-```
-
-Проверить i2c на raspberry pi:
-
-```bash
-python i2c.py
-```
-
 ## Запуск
 
 Запустить backend:
@@ -58,6 +44,14 @@ make s-server
 
 ```bash
 make s-commander
+```
+
+## Raspberry
+
+Проверить i2c на raspberry pi:
+
+```bash
+python i2c.py
 ```
 
 Запустить камеру:
