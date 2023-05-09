@@ -11,7 +11,7 @@ controller = ControllerResolver().resolve()
 commandService = CommandService()
 sio = socketio.Server(cors_allowed_origins='*')
 app = socketio.WSGIApp(sio)
-configToken = config['token']
+configToken = config['TOKEN']
 
 
 @sio.event
