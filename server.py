@@ -5,21 +5,23 @@ import socketio
 import json
 from controllers.ControllerResolver import ControllerResolver
 from commands.CommandService import CommandService
+from utils.Config import config
 
 controller = ControllerResolver().resolve()
 commandService = CommandService()
 sio = socketio.Server(cors_allowed_origins='*')
 app = socketio.WSGIApp(sio)
+configToken = config['token']
 
 
 @sio.event
 def connect(sid: str, environ: str, auth: dict) -> None:
-    token: str = auth['token']
+    requestToken: str = auth['token']
 
-    if token != 'secret':
+    if requestToken != configToken:
         raise ConnectionRefusedError('Authentication failed')
 
-    sio.save_session(sid, {'token': token})
+    sio.save_session(sid, {'token': requestToken})
     print('Connect (%s)' % sid)
 
 
