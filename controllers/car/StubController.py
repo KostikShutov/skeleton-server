@@ -34,19 +34,19 @@ class StubController(ControllerInterface):
 
     def left(self) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
-        self.angleService.setAngle(oldAngle - 45)
+        self.angleService.setAngle(self.angleService.getMinAngle())
         newAngle: int = self.angleService.getCurrentAngle()
         logging.info('Left (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def straight(self) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
-        self.angleService.setAngle(90)
+        self.angleService.setAngle(self.angleService.getInitAngle())
         newAngle: int = self.angleService.getCurrentAngle()
         logging.info('Straight (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 
     def right(self) -> None:
         oldAngle: int = self.angleService.getCurrentAngle()
-        self.angleService.setAngle(oldAngle + 45)
+        self.angleService.setAngle(self.angleService.getMaxAngle())
         newAngle: int = self.angleService.getCurrentAngle()
         logging.info('Right (oldAngle: %s, newAngle: %s)' % (oldAngle, newAngle))
 

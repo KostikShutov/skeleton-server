@@ -17,22 +17,22 @@ class FrontWheels(object):
 
     def turnLeft(self) -> None:
         self.angleService.setAngle(self.angleService.getMinAngle())
-        self.turn(self.angleService.getCurrentAngle())
+        self.turn(self.angleService.getCurrentAngle(withCast=True))
         logging.info('[Front wheels] Turn left')
 
     def turnStraight(self) -> None:
-        self.angleService.setAngle(90)
-        self.turn(self.angleService.getCurrentAngle())
+        self.angleService.setAngle(self.angleService.getInitAngle())
+        self.turn(self.angleService.getCurrentAngle(withCast=True))
         logging.info('[Front wheels] Turn straight')
 
     def turnRight(self) -> None:
         self.angleService.setAngle(self.angleService.getMaxAngle())
-        self.turn(self.angleService.getCurrentAngle())
+        self.turn(self.angleService.getCurrentAngle(withCast=True))
         logging.info('[Front wheels] Turn right')
 
     def turn(self, angle: int) -> None:
         self.angleService.setAngle(angle)
-        self.servo.write(self.angleService.getCurrentAngle())
+        self.servo.write(self.angleService.getCurrentAngle(withCast=True))
         logging.info('[Front wheels] Turn angle to %d', self.angleService.getCurrentAngle())
 
     def ready(self) -> None:
