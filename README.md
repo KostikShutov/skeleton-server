@@ -37,13 +37,13 @@ make d-python
 Запустить backend:
 
 ```bash
-make s-server
+make server
 ```
 
-Запустить commander (consumer):
+Запустить worker:
 
 ```bash
-make s-commander
+make worker
 ```
 
 ## Raspberry

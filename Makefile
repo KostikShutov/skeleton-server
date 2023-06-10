@@ -22,10 +22,10 @@ d-python:
 # Server #
 ##########
 
-.PHONY: s-server
-s-server:
+.PHONY: server
+server:
 	docker-compose run --rm -p 2001:5000 -w /code python-picar python server.py
 
-.PHONY: s-commander
-s-commander:
+.PHONY: worker
+worker:
 	docker-compose run --rm -w /code python-picar python -m celery -A commands worker --concurrency=1 -l INFO
