@@ -34,7 +34,7 @@ make d-python
 
 ## Запуск
 
-Запустить backend:
+Поднять сервер (<http://localhost:2001>):
 
 ```bash
 make server
