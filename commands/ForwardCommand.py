@@ -18,4 +18,4 @@ class ForwardCommand(CommandInterface):
             self.controller.stop()
 
     def canExecute(self, payload: dict) -> bool:
-        return payload['name'] == 'FORWARD'
+        return payload['name'] == 'FORWARD' or payload['name'] == 'MOVE'
