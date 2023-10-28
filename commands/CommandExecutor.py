@@ -1,6 +1,7 @@
 import logging
 from commands.BackwardCommand import BackwardCommand
 from commands.ForwardCommand import ForwardCommand
+from commands.MoveCommand import MoveCommand
 from commands.LeftCommand import LeftCommand
 from commands.RightCommand import RightCommand
 from commands.StopCommand import StopCommand
@@ -21,6 +22,7 @@ class CommandExecutor:
         self.commands = [
             BackwardCommand(controller),
             ForwardCommand(controller),
+            MoveCommand(controller),
             LeftCommand(controller),
             RightCommand(controller),
             StopCommand(controller),
