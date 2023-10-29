@@ -11,8 +11,8 @@ class MoveCommand(CommandInterface):
         speed: int = int(payload['speed']) if 'speed' in payload else 60
         duration: float = float(payload['duration']) if 'duration' in payload else 0
 
-        if 'angle' in payload:
-            self.controller.turn(int(payload['angle']))
+        if 'steering' in payload:
+            self.controller.turn(int(payload['steering']))
 
         self.controller.forward(speed)
 

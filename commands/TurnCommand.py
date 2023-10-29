@@ -7,7 +7,7 @@ class TurnCommand(CommandInterface):
         self.controller = controller
 
     def execute(self, payload: dict) -> None:
-        angle: int = int(payload['angle'])
+        angle: int = int(payload['steering'])
 
         self.controller.turn(angle)
 
