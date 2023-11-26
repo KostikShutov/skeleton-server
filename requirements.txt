@@ -3,5 +3,5 @@ RPi.GPIO==0.7.1
 python-socketio==5.10.0
 eventlet==0.33.3
 python-dotenv==1.0.0
-celery==5.3.4
+celery==5.3.6
 redis==5.0.1
