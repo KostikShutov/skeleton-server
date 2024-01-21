@@ -1,6 +1,6 @@
-import time
 from commands.CommandInterface import CommandInterface
 from controllers.ControllerInterface import ControllerInterface
+from utils.Utils import microSleep
 
 
 class MoveCommand(CommandInterface):
@@ -17,7 +17,7 @@ class MoveCommand(CommandInterface):
         self.controller.forward(speed)
 
         if duration > 0:
-            time.sleep(duration)
+            microSleep(duration)
             self.controller.stop()
 
     def canExecute(self, payload: dict) -> bool:
