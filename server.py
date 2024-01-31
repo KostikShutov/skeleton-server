@@ -1,17 +1,19 @@
 #!/usr/bin/python
 
+import json
 import eventlet
 import socketio
-import json
 from controllers.ControllerResolver import ControllerResolver
 from commands.CommandService import CommandService
 from utils.Config import config
 
-controller = ControllerResolver().resolve()
-commandService = CommandService()
-sio = socketio.Server(cors_allowed_origins='*')
+eventlet.monkey_patch()
+mgr = socketio.RedisManager('redis://%s:%s' % (config['REDIS_HOST'], config['REDIS_PORT']))
+sio = socketio.Server(cors_allowed_origins='*', client_manager=mgr)
 app = socketio.WSGIApp(sio)
-configToken = config['TOKEN']
+configToken: str = config['TOKEN']
+controller = ControllerResolver().resolve()
+commandService = CommandService(socketManager=mgr)
 
 
 @sio.event
