@@ -2,7 +2,7 @@ from utils.Redis import redis
 
 
 class SpeedService:
-    MIN_SPEED: int = 1
+    MIN_SPEED: int = 0
     INIT_SPEED: int = 60
     MAX_SPEED: int = 100
 

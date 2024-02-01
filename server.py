@@ -33,11 +33,6 @@ def disconnect(sid: str) -> None:
 
 
 @sio.event
-def health(sid: str) -> None:
-    print('Health (%s)' % sid)
-
-
-@sio.event
 def state(sid: str) -> str:
     return json.dumps(controller.state())
 

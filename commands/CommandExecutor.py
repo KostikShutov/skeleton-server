@@ -1,4 +1,5 @@
 import logging
+from commands.SpeedCommand import SpeedCommand
 from commands.BackwardCommand import BackwardCommand
 from commands.ForwardCommand import ForwardCommand
 from commands.MoveCommand import MoveCommand
@@ -11,15 +12,15 @@ from commands.CameraLeftCommand import CameraLeftCommand
 from commands.CameraRightCommand import CameraRightCommand
 from commands.CameraUpCommand import CameraUpCommand
 from commands.CameraDownCommand import CameraDownCommand
-from controllers.ControllerResolver import ControllerResolver
+from controllers.ControllerInterface import ControllerInterface
 
 
 class CommandExecutor:
-    def __init__(self) -> None:
-        controller = ControllerResolver().resolve()
+    def __init__(self, controller: ControllerInterface) -> None:
         controller.init()
 
         self.commands = [
+            SpeedCommand(controller),
             BackwardCommand(controller),
             ForwardCommand(controller),
             MoveCommand(controller),

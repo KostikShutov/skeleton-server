@@ -15,18 +15,31 @@ class StubController(ControllerInterface):
 
     def state(self) -> dict:
         return {
+            'ok': True,
             'minAngle': self.angleService.getMinAngle(),
             'maxAngle': self.angleService.getMaxAngle(),
             'currentAngle': self.angleService.getCurrentAngle(),
             'minSpeed': self.speedService.getMinSpeed(),
             'maxSpeed': self.speedService.getMaxSpeed(),
-            'currentSpeed': self.speedService.getCurrentSpeed()
+            'currentSpeed': self.speedService.getCurrentSpeed(),
+            'latitude': 43.114422076554,
+            'longitude': 131.898333122618,
         }
 
-    def forward(self, speed: int) -> None:
+    def speed(self, speed: int) -> None:
+        self.speedService.setSpeed(speed)
+        logging.info('Speed (speed: %s)' % speed)
+
+    def forward(self, speed: int = None) -> None:
+        if speed is not None:
+            self.speedService.setSpeed(speed)
+
         logging.info('Forward (speed: %s)' % speed)
 
-    def backward(self, speed: int) -> None:
+    def backward(self, speed: int = None) -> None:
+        if speed is not None:
+            self.speedService.setSpeed(speed)
+
         logging.info('Backward (speed: %s)' % speed)
 
     def stop(self) -> None:

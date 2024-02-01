@@ -1,12 +1,14 @@
 import json
 import socketio
 from celery import current_task
+from controllers.ControllerResolver import ControllerResolver
 from commands.CommandExecutor import CommandExecutor
 from commands.celery import app
 from utils.Config import config
 
 sio = socketio.RedisManager('redis://%s:%s' % (config['REDIS_HOST'], config['REDIS_PORT']), write_only=True)
-commandExecutor = CommandExecutor()
+controller = ControllerResolver().resolve()
+commandExecutor = CommandExecutor(controller=controller)
 
 
 @app.task
@@ -16,6 +18,14 @@ def commandTask(body: str) -> None:
 
     try:
         commandExecutor.execute(payload)
-        sio.emit('getCommand', data=json.dumps({'id': commandId, 'status': 'success'}))
+        sio.emit('getCommand', data=json.dumps({
+            'id': commandId,
+            'status': 'success',
+            'state': controller.state(),
+        }))
     except Exception:
-        sio.emit('getCommand', data=json.dumps({'id': commandId, 'status': 'error'}))
+        sio.emit('getCommand', data=json.dumps({
+            'id': commandId,
+            'status': 'error',
+            'state': controller.state(),
+        }))

@@ -89,21 +89,31 @@ class RemoteController(ControllerInterface):
 
     def state(self) -> dict:
         return {
+            'ok': True,
             'minAngle': self.angleService.getMinAngle(),
             'maxAngle': self.angleService.getMaxAngle(),
             'currentAngle': self.angleService.getCurrentAngle(),
             'minSpeed': self.speedService.getMinSpeed(),
             'maxSpeed': self.speedService.getMaxSpeed(),
-            'currentSpeed': self.speedService.getCurrentSpeed()
+            'currentSpeed': self.speedService.getCurrentSpeed(),
+            'latitude': 43.12146749106407,
+            'longitude': 131.86812081936944,
         }
 
-    def forward(self, speed: int) -> None:
+    def speed(self, speed: int) -> None:
         self.speedService.setSpeed(speed)
+
+    def forward(self, speed: int = None) -> None:
+        if speed is not None:
+            self.speedService.setSpeed(speed)
+
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.forward()
 
-    def backward(self, speed: int) -> None:
-        self.speedService.setSpeed(speed)
+    def backward(self, speed: int = None) -> None:
+        if speed is not None:
+            self.speedService.setSpeed(speed)
+
         self.backWheels.speed = self.speedService.getCurrentSpeed()
         self.backWheels.backward()
 

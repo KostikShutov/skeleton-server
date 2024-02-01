@@ -8,7 +8,7 @@ class BackwardCommand(CommandInterface):
         self.controller = controller
 
     def execute(self, payload: dict) -> None:
-        speed: int = int(payload['speed']) if 'speed' in payload else 60
+        speed: int = int(payload['speed']) if 'speed' in payload else None
         duration: float = float(payload['duration']) if 'duration' in payload else 0
 
         self.controller.backward(speed)
