@@ -7,6 +7,7 @@ from controllers.car.FrontWheels import FrontWheels
 from controllers.car.PCA9685 import PWM
 from controllers.car.Servo import Servo
 from controllers.car.TB6612 import Motor
+from controllers.car.Gps import Gps
 from controllers.ControllerInterface import ControllerInterface
 
 
@@ -32,6 +33,7 @@ class RemoteController(ControllerInterface):
 
         self.angleService = AngleService()
         self.speedService = SpeedService()
+        self.gps = Gps()
 
         self.pwm = None
         self.frontWheels = None
@@ -96,8 +98,8 @@ class RemoteController(ControllerInterface):
             'minSpeed': self.speedService.getMinSpeed(),
             'maxSpeed': self.speedService.getMaxSpeed(),
             'currentSpeed': self.speedService.getCurrentSpeed(),
-            'latitude': 43.12146749106407,
-            'longitude': 131.86812081936944,
+            'latitude': self.gps.getLatitude(),
+            'longitude': self.gps.getLongitude(),
         }
 
     def speed(self, speed: int) -> None:
