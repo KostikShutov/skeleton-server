@@ -3,6 +3,6 @@ RPi.GPIO==0.7.1
 python-socketio==5.11.2
 eventlet==0.36.1
 python-dotenv==1.0.1
-celery==5.3.6
-redis==5.0.3
+celery==5.4.0
+redis==5.0.4
 gpsd-py3==0.3.0
