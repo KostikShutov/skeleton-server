@@ -78,6 +78,23 @@
         </Command>
     </Commands>
     <Controls>
+        <Control>
+            <Name>REMOTE</Name>
+            <Module>controls.remote</Module>
+            <Behaviours>
+            </Behaviours>
+        </Control>
+        <Control>
+            <Name>AUTONOMOUS</Name>
+            <Module>controls.autonomous</Module>
+            <Behaviours>
+                <Behaviour name="static_smoothly"/>
+                <Behaviour name="static_aggressive"/>
+                <Behaviour name="speed_dynamic"/>
+                <Behaviour name="speed_slow"/>
+                <Behaviour name="speed_weekly"/>
+            </Behaviours>
+        </Control>
     </Controls>
     <Drivers>
         <Driver>
